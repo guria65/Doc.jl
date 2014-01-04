@@ -1,2 +1,62 @@
-Doc.jl
-======
+= Doc.jl
+
+== Design
+
+=== Part I -- Definition of DOC
+
+DOC is a global dictionary object, where the keys are any object
+one wishes to document, and the value is any object that implements
+`writemime` with at least the following MIME types:
+
+----
+writemime("meta/summary", DOC[f] )
+writemime("meta/author", DOC[f] )
+writemime("meta/date", DOC[f] )
+writemime("text/plain", DOC[f] )
+writemime("text/html", DOC[f] )
+----
+
+In addition, `DOC[f].meta` must be an array listing all the metadata
+available for the object.
+
+
+=== Part II - @doc macro
+
+Anyone can write a macro for documentation, as long as it fills the
+DOC object correctly, as indicated in Part I. A macro based on
+AsciiDoc may look like this:
+
+[source]
+----
+@doc """
+ :author: Daniel Carrera
+ :summary: One sentence summary of what the function does.
+ :param:  ...
+ :param:  ...
+ :return: ...
+
+The rest of the docstring is a more detailed description
+of the function. Everything in the docstring is processed
+by some http://www.asciidoc.org[AsciiDoc] parser.
+
+* Include.
+* Bullet.
+* Lists.
+
+== Level 2 heading
+
+[options="header,footer"]
+|=======================
+|Col 1|Col 2      |Col 3
+|1    |Item 1     |a
+|2    |Item 2     |b
+|3    |Item 3     |c
+|6    |Three items|d
+|=======================
+
+== Another level 2 heading
+
+""" function foo()
+    ...
+end
+----
