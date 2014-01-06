@@ -4,20 +4,22 @@
 
 === Part I -- Definition of DOC
 
-DOC is a global dictionary object, where the keys are any object
-one wishes to document, and the value is any object that implements
-`writemime` with at least the following MIME types:
+DOC is a global dictionary object. The keys are string representations
+of Julia objects. The values are themselves dictionary objects of
+type `Dict{Symbol,String}`, containing the documentation and metadata.
+For example:
 
 ----
-writemime("meta/summary", DOC[f] )
-writemime("meta/author", DOC[f] )
-writemime("meta/date", DOC[f] )
-writemime("text/plain", DOC[f] )
-writemime("text/html", DOC[f] )
+DOC[f][:date]
+DOC[f][:author]
+DOC[f][:docstring]
+DOC[f][:description]
 ----
 
-In addition, `DOC[f].meta` must be an array listing all the metadata
-available for the object.
+You can obtain a list of the available metadata with `keys(DOC[f])`.
+The only keys that are included automatically are `:docstring` and
+`:description`. Finally, the `help()` function simply returns
+`DOC[f][:description]`.
 
 
 === Part II - @doc macro
