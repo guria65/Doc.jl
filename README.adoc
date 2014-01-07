@@ -25,7 +25,7 @@ Use `@doc` to add documentation to the online help:
 ----
 foo(x) = 3x
 
-@doc "Documentation for `foo()`."  bar
+@doc "Documentation for `foo()`."  foo
 
 @doc """
  :author: Daniel Carrera
