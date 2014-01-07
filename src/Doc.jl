@@ -2,7 +2,7 @@ module Doc
 
 importall Base
 
-include("api.jl")
-include("asciidoc.jl")
+include("backend.jl")
+include("frontend.jl")
 
 end

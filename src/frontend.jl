@@ -2,22 +2,27 @@
 :author: Daniel Carrera
 :date:   2014-01-07
 
-== AsciiDoc implementation
+== Frontend
 
-The only AsciiDoc-specific part of this program is the
-interpretation of literal blocks in the parse() function.
-"""
+The frontend provides the `@doc` macro, and nothing more. The job of `@doc`
+is to populate the global `DOC` object correctly, so that the `help()` and
+`apropos()` functions will behave correctly.
 
-export @doc
-
-"""
 === Usage of `@doc` macro
 
 @doc '...' function foo(x::Real) ... end
 @doc '...' macro foo(x::Real) ... end
 @doc '...' foo(x::Real) = ...
 @doc '...' foo
+
+=== AsciiDoc
+
+The only AsciiDoc-dependant part of this module is the interpretation of
+literal blocks in the `parse()` function.
 """
+
+export @doc
+
 # 
 # :( function foo(x::Real) 3x end ).args[1] == :( foo(x::Real) )
 # :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )

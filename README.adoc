@@ -2,12 +2,9 @@
 
 == Design
 
-=== Part I -- Definition of DOC
-
-DOC is a global object of type `Dict{String,Dict{Symbol,String}}`.
-The keys are string representations of Julia functions or methods.
-The values are objects of type `Dict{Symbol,String}`, which contain
-the documentation and metadata. For example:
+`DOC` is a global object of type `DocDict`. The keys are string representations
+of Julia functions, methods or other objects. The values are objects of type
+`DocEntry`, which contain the documentation and metadata. For example:
 
 ----
 DOC[f][:date]
@@ -16,28 +13,46 @@ DOC[f][:docstring]
 DOC[f][:description]
 ----
 
-You can obtain a list of the available metadata with `keys(DOC[f])`.
-The only keys that are included automatically are `:docstring` and
-`:description`. Finally, the `help()` function simply returns
-`DOC[f][:description]`.
+List available metadata with `keys(DOC[f])`. In practice, one should access
+`DOC` only through the provided API:
 
+* The `@doc` macro.
+* The `help` and `apropos` functions.
 
-=== Part II - `@doc` macro
-
-The `@doc` macro inserts values in the `DOC` object. Example:
+Use `@doc` to add documentation to the online help:
 
 [source]
 ----
+foo(x) = 3x
+
+@doc "Documentation for `foo()`."  bar
+
 @doc """
  :author: Daniel Carrera
 
 Description of how the function works.
-The description can be multiple lines.
 
-""" function foo(x::Real, y::Integer)
-    ...
+""" function foo(x::Real)
+    7x/3
+end
+----
+
+Use `help` and `apropos` to search the online help:
+
+[source]
+----
+help(foo)
+
+help("foo")
+
+help("foo(x::Real)")
+
+for m in methods(foo)
+	help(m)
 end
 
-@doc "Documentation for `bar()`"  bar
+apropos("foo")
 
+apropos("f*")
 ----
+

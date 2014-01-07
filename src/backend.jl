@@ -2,14 +2,20 @@
 :author: Daniel Carrera
 :date:   2014-01-07
 
-== Base API
+== Backend
 
-The basic API consists of a global `DOC` dictionary object.
-The keys are the string representation of functions and
-methods, and the values are DocEntry objects.
+The backend defines the contents of the global `DOC` object, and how the
+`help()` and `apropos()` functions look inside that object. In this way,
+the backend determines how the frontend macro--`@doc`--needs to populate
+the `DOC` object.
+
+`DOC` is a global dictionary of type `DocDict`. The keys are string
+representations of functions, methods or other Julia objects. The values
+are `DocEntry` objects which themselves are dictionaries, indexed by
+symbols such as `:author`, `:date` and `:description`.
 """
 
-export DOC
+export DOC, DocEntry, DocDict
 
 typealias DocEntry Dict{Symbol,String}
 typealias DocDict  Dict{String,DocEntry}
@@ -28,7 +34,7 @@ function apropos(s::Union(String,Regex))
 	end
 end
 
-help(m::String) = haskey(DOC,s) ? DOC[s] : apropos(s)
+help(m::String) = haskey(DOC,s) ? DOC[s][:description] : apropos(s)
 
 # 
 # See also: https://github.com/JuliaLang/julia/blob/master/base/methodshow.jl
@@ -40,14 +46,14 @@ function help(m::Method)
 	sig = match(r"^(\(.+\)) at .*\:\d+", string(m).captures[1])
 	str = fun * sig # Ex: "foo" * "(x::Real)" == "foo(x::Real)"
 	
-	haskey(DOC,str) ? DOC[str] : help(fun)
+	haskey(DOC,str) ? DOC[str][:description] : help(fun)
 end
 
 function help(f::Function)
 	s = string(f)
 	
 	if haskey(DOC,s)
-		DOC[s]
+		DOC[s][:description]
 	else
 		# If we can identify a unique method, try to use that.
 		ms = collect( methods(f) )
