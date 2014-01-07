@@ -15,7 +15,7 @@ export DOC
 # TODO: Define `DocEntry` and `DocDict` correctly.
 #
 DocEntry = Dict{Symbol,String}
-DocDict  = Dict{Any,DocEntry}
+DocDict  = Dict{String,DocEntry}
 
 DOC = DocDict()
 

@@ -4,10 +4,10 @@
 
 === Part I -- Definition of DOC
 
-DOC is a global dictionary object. The keys are string representations
-of Julia objects. The values are themselves dictionary objects of
-type `Dict{Symbol,String}`, containing the documentation and metadata.
-For example:
+DOC is a global object of type `Dict{String,Dict{Symbol,String}}`.
+The keys are string representations of Julia functions or methods.
+The values are objects of type `Dict{Symbol,String}`, which contain
+the documentation and metadata. For example:
 
 ----
 DOC[f][:date]
