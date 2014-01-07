@@ -12,11 +12,26 @@ export @doc, @doc_str, @doc_mstr
 macro doc_str(s)   init(s)   end
 macro doc_mstr(s)  init(s)   end
 
-macro doc(s,f)
-	str = string(typeof(s) == Expr ? eval(s) : s) # Docstring.
-	fun = string(typeof(f) == Expr ? eval(f) : f) # Function name.
+doc"""
+=== Usage of `@doc` macro
+
+@doc '...' function foo(x::Real) ... end
+@doc '...' macro foo(x::Real) ... end
+@doc '...' foo(x::Real) = ...
+"""
+# 
+# :( function foo(x::Real) 3x end ).args[1] == :( foo(x::Real) )
+# :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )
+# 
+macro doc(s,f::Expr)
+	#
+	# NOTE: This macro only documents methods, not functions.
+	#       I think that the `help` function needs to do a generic search.
+	#
+	docstr = typeof(s) == Expr ? eval(s) : s
+	method = string( f.args[1] )
 	
-	DOC[fun] = init(str)
+	DOC[method] = init(str)
 end
 
 
