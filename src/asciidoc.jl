@@ -2,15 +2,16 @@ doc"""
 :author: Daniel Carrera
 :date:   2014-01-07
 
-== Asciidoc implementation
+== AsciiDoc implementation
 
-...
+The only AsciiDoc-specific part of this program is the
+interpretation of literal blocks in the parse() function.
 """
 
 export @doc, @doc_str, @doc_mstr
 
-macro doc_str(s)   init(s)   end
-macro doc_mstr(s)  init(s)   end
+macro doc_str(s)   parse(s)   end
+macro doc_mstr(s)  parse(s)   end
 
 doc"""
 === Usage of `@doc` macro
@@ -35,7 +36,7 @@ macro doc(s,f)
 	end
 	
 	docstr   = typeof(s) == Expr ? eval(s) : s
-	DOC[key] = init(docstr)
+	DOC[key] = parse(docstr)
 end
 
 
@@ -44,7 +45,7 @@ end
 # 
 # -- Next step is to parse entry[:description] as Asciidoc.
 #
-function init(str)
+function parse(str)
 	entry = DocEntry()
 	entry[:docstring] = str
 	entry[:description] = ""
