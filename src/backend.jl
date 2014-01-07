@@ -17,6 +17,8 @@ symbols such as `:author`, `:date` and `:description`.
 
 export DOC, DocEntry, DocDict
 
+import Base: help, apropos
+
 typealias DocEntry Dict{Symbol,String}
 typealias DocDict  Dict{String,DocEntry}
 
