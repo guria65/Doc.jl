@@ -11,11 +11,8 @@ methods, and the values are DocEntry objects.
 
 export DOC
 
-#
-# TODO: Define `DocEntry` and `DocDict` correctly.
-#
-DocEntry = Dict{Symbol,String}
-DocDict  = Dict{String,DocEntry}
+typealias DocEntry Dict{Symbol,String}
+typealias DocDict  Dict{String,DocEntry}
 
 DOC = DocDict()
 
