@@ -18,20 +18,24 @@ doc"""
 @doc '...' function foo(x::Real) ... end
 @doc '...' macro foo(x::Real) ... end
 @doc '...' foo(x::Real) = ...
+@doc '...' foo
 """
 # 
 # :( function foo(x::Real) 3x end ).args[1] == :( foo(x::Real) )
 # :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )
+# :( foo )                                  == :foo
 # 
-macro doc(s,f::Expr)
-	#
-	# NOTE: This macro only documents methods, not functions.
-	#       I think that the `help` function needs to do a generic search.
-	#
-	docstr = typeof(s) == Expr ? eval(s) : s
-	method = string( f.args[1] )
+macro doc(s,f)
+	if typeof(f) == Expr # Expr -> Method Name
+		key = string(f.args[1])
+		key = ismatch(r"\:\((\w+)\)", key).captures[1]
+		eval(f)
+	else
+		key = string(f)  # Symbol -> Function Name
+	end
 	
-	DOC[method] = init(str)
+	docstr   = typeof(s) == Expr ? eval(s) : s
+	DOC[key] = init(docstr)
 end
 
 
