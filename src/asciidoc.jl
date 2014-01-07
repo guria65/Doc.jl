@@ -26,7 +26,7 @@ export @doc
 macro doc(s,f)
 	if typeof(f) == Expr # Expr -> Method Name
 		key = string(f.args[1])
-		key = ismatch(r"\:\((\w+)\)", key).captures[1]
+		key = key[3:end-1] # Remove the surounding ":(" and ")"
 		eval(f)
 	else
 		key = string(f)  # Symbol -> Function Name
