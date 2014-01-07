@@ -22,43 +22,22 @@ The only keys that are included automatically are `:docstring` and
 `DOC[f][:description]`.
 
 
-=== Part II - @doc macro
+=== Part II - `@doc` macro
 
-Anyone can write a macro for documentation, as long as it fills the
-DOC object correctly, as indicated in Part I. A macro based on
-AsciiDoc may look like this:
+The `@doc` macro inserts values in the `DOC` object. Example:
 
 [source]
 ----
 @doc """
  :author: Daniel Carrera
- :summary: One sentence summary of what the function does.
- :param:  ...
- :param:  ...
- :return: ...
 
-The rest of the docstring is a more detailed description
-of the function. Everything in the docstring is processed
-by some http://www.asciidoc.org[AsciiDoc] parser.
+Description of how the function works.
+The description can be multiple lines.
 
-* Include.
-* Bullet.
-* Lists.
-
-== Level 2 heading
-
-[options="header,footer"]
-|=======================
-|Col 1|Col 2      |Col 3
-|1    |Item 1     |a
-|2    |Item 2     |b
-|3    |Item 3     |c
-|6    |Three items|d
-|=======================
-
-== Another level 2 heading
-
-""" function foo()
+""" function foo(x::Real, y::Integer)
     ...
 end
+
+@doc "Documentation for `bar()`"  bar
+
 ----

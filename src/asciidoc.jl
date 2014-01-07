@@ -1,4 +1,4 @@
-doc"""
+"""
 :author: Daniel Carrera
 :date:   2014-01-07
 
@@ -8,12 +8,9 @@ The only AsciiDoc-specific part of this program is the
 interpretation of literal blocks in the parse() function.
 """
 
-export @doc, @doc_str, @doc_mstr
+export @doc
 
-macro doc_str(s)   parse(s)   end
-macro doc_mstr(s)  parse(s)   end
-
-doc"""
+"""
 === Usage of `@doc` macro
 
 @doc '...' function foo(x::Real) ... end

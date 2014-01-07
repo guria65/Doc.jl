@@ -1,6 +1,6 @@
-doc"""
+"""
 :author: Daniel Carrera
-:date:   2014-01-06
+:date:   2014-01-07
 
 == Base API
 
