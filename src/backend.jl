@@ -1,7 +1,4 @@
 """
-:author: Daniel Carrera
-:date:   2014-01-07
-
 == Backend
 
 The backend defines the contents of the global `DOC` object, and how the

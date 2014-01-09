@@ -1,7 +1,4 @@
 """
-:author: Daniel Carrera
-:date:   2014-01-07
-
 == Frontend
 
 The frontend provides the `@doc` macro, and nothing more. The job of `@doc`
