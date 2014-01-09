@@ -38,7 +38,7 @@ macro doc(s,f)
 	end
 	
 	docstr   = typeof(s) == Expr ? eval(s) : s
-	DOC[key] = parse(docstr)
+	DOC[key] = newdoc(docstr)
 end
 
 
@@ -47,7 +47,7 @@ end
 # 
 # -- Next step is to parse entry[:description] as Asciidoc.
 #
-function parse(str)
+function newdoc(str)
 	entry = DocEntry()
 	entry[:docstring] = str
 	entry[:description] = ""
