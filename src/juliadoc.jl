@@ -30,18 +30,11 @@ function file2doc(filename)
 	
 	close(io)
 	
-	return str2doc( join(ln ,"") )
-end
-
-# 
-# Extracts the docstrings out of a string.
-# 
-function str2doc(str)
-	
-	const N = length(str)
-	
+	str = join(ln ,"")  # File contents.
 	doc = "" # Docstring.
 	pos = 0  # Position.
+	
+	const N = length(str)
 	
 	while pos < N
 		(expr, pos) = parse(str, pos)
