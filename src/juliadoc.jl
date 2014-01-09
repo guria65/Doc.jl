@@ -52,13 +52,13 @@ isinclude(expr::Expr) = (expr.head == :call) &
                         (expr.args[1] == :include)
 
 function expr2doc(expr::Expr)
-	doc = ""
 	if ismstr(expr)
 		# `eval` needed to run the @mstr macro.
 		doc = eval(expr)
 	elseif isinclude(expr)
 		doc = file2doc(expr.args[2])
 	else
+		doc = ""
 		for arg in expr.args
 			if typeof(arg) == Expr
 				doc *= expr2doc(arg)
