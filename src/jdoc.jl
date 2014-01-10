@@ -2,23 +2,20 @@
 :author: Daniel Carrera
 :date:   2014-01-09
 
-=== juliadoc
+=== jdoc
 
 This program extracts all the docstrings (i.e. triple-quoted
 strings) out of a Julia file, respecting `include` directives.
 Goals for the future include:
 
-- Command-line `juliadoc example.jl` program.
+* Command-line `jdoc example.jl` program.
 
-- `juliadoc example.jl` should produce a pager similar to
-  man pages or `perldoc`.
+* `jdoc example.jl` should produce a pager similar to man pages or `perldoc`.
 
-- Add some form of support for one or more markup formats
-  (candidates include Asciidoc, Markdown, ReST, and LaTeX).
-  The support might be implemented through extrnal programs.
+* Add some support for markup formats (e.g. Asciidoc, Markdown, ReST, LaTeX)
+  using external programs.
 
-- Add support for the `@doc` macro, implemented in the
-  `Doc.jl` module.
+* Add support for the `@doc` macro, implemented in the `Doc.jl` module.
 """
 
 # 
