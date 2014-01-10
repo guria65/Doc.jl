@@ -13,14 +13,23 @@ http://asciidoctor.org[Asciidoctor].
 
 ==== Status
 
-So far I have only implemented a basic data structure to hold
-the parsed documentation. The next step is to parse JuliaDoc
-into this data structure and then convert to other formats
-like HTML.
+I can currently parse the simplest type of heading:
 
-NOTE:  I think that `Node` should have another field to store some
-       kind of metadata. For example, I'd like to have :section
-       tags with a :level field.
+----
+= Head 1
+
+== Head 2
+
+=== Head 3
+
+==== Head 4
+
+===== Head 5
+----
+
+I have also implemented a basic tree data structure to hold the
+parsed documentation. The next step is to parse JuliaDoc into
+this data structure and then convert to other formats like HTML.
 """
 
 typealias Meta Dict{Symbol,String}
@@ -62,7 +71,7 @@ function JuliaDoc(str::String)
 	root = Node(:root, docstr)
 	
 	#
-	# Top-level headings.
+	# Parse all headings (single-line headings).
 	#
 	parse_headings!(root)
 	
