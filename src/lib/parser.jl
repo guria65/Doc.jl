@@ -97,23 +97,9 @@ function parse_blocks!(obj::Node)
 end
 
 
-
 # - - - - - - - - - - - + - - - - - - - - - - - #
 #                H E A D I N G S                #
 # - - - - - - - - - - - + - - - - - - - - - - - #
-"""
-=== Next todo
-
-* Only one level 1 heading allowed.
-
-* If the line directly after the level 1 heading is not blank,
-it is interpreted as the author.
-
-* If the line after that is also not blank, it is interpreted
-as the revision information.
-
-* A third non-blank line is interpreted as the first paragraph.
-"""
 function parse_headings!(obj::Node, level::Integer=1)
 	# New content.
 	content = Item[]
