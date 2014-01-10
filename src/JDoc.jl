@@ -1,7 +1,6 @@
 """
-:author: Daniel Carrera
-
 = JDoc.jl
+Daniel Carrera
 
 Documentation system for Julia.
 """
