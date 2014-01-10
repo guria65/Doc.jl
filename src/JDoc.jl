@@ -9,12 +9,12 @@ module JDoc
 """
 == Online help
 """
-include("backend.jl")
-include("frontend.jl")
+include("lib/backend.jl")
+include("lib/frontend.jl")
 
 """
 == JDoc markup
 """
-include("parser.jl")
+include("lib/parser.jl")
 
 end
