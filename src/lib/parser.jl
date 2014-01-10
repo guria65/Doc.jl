@@ -70,7 +70,7 @@ function JDoc(str::String)
 	parse_headings!(root)
 	
 	
-	toplevel(o) = isa(o, Node) && o.tag == :section && o.meat[:level] == 1
+	toplevel(o) = isa(o, Node) && o.tag == :section && o.meta[:level] == 1
 	
 	if toplevel(root.content[1])
 		return root.content[1]
@@ -158,20 +158,14 @@ function parse_headings!(obj::Node, level::Integer=1)
 			end
 			content[1].content = myjoin(lines)
 		end
-		
-		#
-		# Next level.
-		#
-		parse_headings!(content[1], 2)
-	else
-		#
-		# Parse lower-level headings.
-		#
-		if level < 5
-			for item in content
-				if isa(item,Node)
-					parse_headings!(item, level+1)
-				end
+	end
+	#
+	# Parse lower-level headings.
+	#
+	if level < 5
+		for item in content
+			if isa(item,Node)
+				parse_headings!(item, level+1)
 			end
 		end
 	end
