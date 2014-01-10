@@ -1,21 +1,25 @@
 """
-== Frontend
+
+=== Frontend
 
 The frontend provides the `@doc` macro, and nothing more. The job of `@doc`
 is to populate the global `DOC` object correctly, so that the `help()` and
 `apropos()` functions will behave correctly.
 
-=== Usage of `@doc` macro
+==== Usage of `@doc` macro
 
 @doc '...' function foo(x::Real) ... end
 @doc '...' macro foo(x::Real) ... end
 @doc '...' foo(x::Real) = ...
 @doc '...' foo
 
-=== AsciiDoc
+==== AsciiDoc
 
 The only AsciiDoc-dependant part of this module is the interpretation of
-literal blocks in the `parse()` function.
+literal blocks in the `newdoc()` function.
+
+TOO: Rewrite `newdoc` with a call to the JDoc parser, or similar.
+
 """
 
 export @doc

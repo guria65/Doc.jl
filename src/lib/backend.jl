@@ -1,5 +1,6 @@
 """
-== Backend
+
+=== Backend
 
 The backend defines the contents of the global `DOC` object, and how the
 `help()` and `apropos()` functions look inside that object. In this way,
