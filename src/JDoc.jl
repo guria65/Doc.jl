@@ -13,9 +13,9 @@ include("lib/backend.jl")
 include("lib/frontend.jl")
 
 """
-== JDoc markup
-
+== Writing manuals
 """
+include("jdoc.jl")
 include("lib/parser.jl")
 
 end

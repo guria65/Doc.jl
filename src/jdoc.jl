@@ -1,6 +1,4 @@
 """
-:author: Daniel Carrera
-:date:   2014-01-09
 
 === jdoc
 
