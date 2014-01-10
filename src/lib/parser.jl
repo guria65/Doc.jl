@@ -30,11 +30,6 @@ parsed documentation. The next step is to parse JuliaDoc into
 this data structure and then convert to other formats like HTML.
 """
 
-typealias Meta Dict{Symbol,String}
-
-#
-# TODO: Replace meta::Dict by meta::Meta -- don't know how.
-#
 type Node
 	tag::Symbol
 	content::Union(String,Array{Union(Node,String)})
