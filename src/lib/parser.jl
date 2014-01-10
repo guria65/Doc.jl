@@ -69,7 +69,14 @@ function JDoc(str::String)
 	parse_blocks!(root)
 	parse_headings!(root)
 	
-	return root.content[1]
+	
+	toplevel(o) = isa(o, Node) && o.tag == :section && o.meat[:level] == 1
+	
+	if toplevel(root.content[1])
+		return root.content[1]
+	else
+		return root
+	end
 end
 
 # - - - - - - - - - - - + - - - - - - - - - - - #
