@@ -33,143 +33,119 @@ this data structure and then convert to other formats like HTML.
 
 type Node
 	tag::Symbol
-	content::Union(String,Array{Union(Node,String)})
+	content::Array{Union(Node,String)}
 	meta::Dict
 	
-	Node(tag,content)      = new(tag,content,Dict())
-	Node(tag,content,meta) = new(tag,content,meta)
+	Node(tag)            = new(tag,Item[],Dict())
+	Node(tag,meta::Dict) = new(tag,Item[],meta)
+	Node(tag,str::String)      = new(tag,mysplit(str),Dict())
+	Node(tag,str::String,meta) = new(tag,mysplit(str),meta)
 end
 
 typealias Item Union(Node,String)
 
 #
-# Empty lines have syntactic meaning. Be sure to keep them.
+# Convenience functions.
 #
-function mysplit(str)
-	split(str, "\n", true)
-end
-function myjoin(lines)
-	join(lines, "\n")
-end
+is(obj,tag) = typeof(obj) == Node && obj.tag == tag
 
-#
-# Convenience function.
-#
-function items(obj::Node)
-	typeof(obj.content) == String ? [obj.content] : obj.content
-end
+mysplit(str)  = split(str, "\n", true) # Retain blank lines.
+myjoin(lines) = join(lines, "\n")      # Undo mysplit().
 
+isblank(node::Node) = all(node.content .== "")
+append!(node::Node,item::Item) = push!(node.content, item)
 
 #
 # This function parses a JuliaDoc string and returns an object.
 #
-function JDoc(str::String)
+function JDoc(docstr::String)
 	
 	root = Node(:root, docstr)
 	
-	parse_blocks!(root)
-	parse_headings!(root)
+	#parse_blocks!(root)
+	parse_sections!(root)
 	
-	
-	toplevel(o) = isa(o, Node) && o.tag == :section && o.meta[:level] == 1
-	
-	if toplevel(root.content[1])
-		return root.content[1]
-	else
-		return root
-	end
-end
-
-# - - - - - - - - - - - + - - - - - - - - - - - #
-#                  B L O C K S                  #
-# - - - - - - - - - - - + - - - - - - - - - - - #
-function parse_blocks!(obj::Node)
-	# New content.
-	content = Item[]
-	
-	# Types of block.
-	comment = r"^////"
-	example = r"^===="
-	literal = r"^...."
-	listing = r"^----"
-	sidebar = r"^****"
-	verse = r"^____"
-	table = r"^!==="
+	return root
 end
 
 
 # - - - - - - - - - - - + - - - - - - - - - - - #
-#                H E A D I N G S                #
+#                S E C T I O N S                #
 # - - - - - - - - - - - + - - - - - - - - - - - #
-function parse_headings!(obj::Node, level::Integer=1)
-	# New content.
-	content = Item[]
-	
-	regex = Regex("^={$level}\s*([^=].*)\$")
-	blank = true
+function parse_sections!(obj::Node, level::Integer=0)
+	#
+	# All sections begin with a (possibly empty) preamble.
+	#
+	content = Item[ Node(:preamble) ]
+	heading = Regex("^={$(level+1)}\s*([^=].*)\$")
 	
 	#
-	# When parsing headings, the content is always a single string.
+	# Content is an array of strings and block nodes.
 	#
-	for line in mysplit(obj.content)
-		if ismatch(regex,line)
+	for item in obj.content
+		
+		if isa(item,String) && ismatch(heading, item)
+			# New section.
 			meta = {
 				:level => level,
-				:title => strip(match(regex,line).captures[1])
+				:title => strip(match(heading, item).captures[1])
 			}
-			push!(content, Node(:section,"",meta))
-			blank = true
+			push!(content, Node(:section,meta) )
 		else
-			if length(content) == 0
-				push!(content, line)
-			else
-				if isa(content[end],String)
-					content[end] *= "\n" * line
-				else
-					# Inside a section.
-					content[end].content *= (blank ? "" : "\n") * line
-					blank = false
+			# Add (string|block) to the current (section|preamble).
+			append!(content[end], item)
+		end
+	end
+	
+	# Special rules for top-level headings
+	if level == 0
+		if length(content) > 2
+			error("Only one top-level section allowed.")
+		end
+		if length(content) == 2
+			# Have exactly one level 0 section.
+			if !isblank(content[1])
+				error("No text allowed before a level-0 section.")
+			end
+			
+			# Read the author and revision if any.
+			if ismatch(r"\w", content[2].content[1])
+				content[2].meta[:author] = shift!(content[2].content)
+				if ismatch(r"\w", content[2].content[1])
+					content[2].meta[:revision] = shift!(content[2].content)
 				end
 			end
 		end
 	end
 	
-	#
-	# Speical rules for top-level headings
-	#
-	if level == 1
-		while isa(content[1], String) && ismatch(r"\s*", content[1])
-			shift!(content)
-		end
-		if isa(content[1], String)
-			error("No text allowed before the title.")
-		end
-		if length(content) > 1
-			error("Only one top-level section allowed.")
-		end
-		
-		#
-		# Read the author and revision if any.
-		#
-		lines = mysplit(content[1].content)
-		if ismatch(r"\w", lines[1])
-			content[1].meta[:author] = shift!(lines)
-			if ismatch(r"\w", lines[1])
-				content[1].meta[:revision] = shift!(lines)
-			end
-			content[1].content = myjoin(lines)
-		end
-	end
-	#
+	# Remove blank preamble -- always true for level-0.
+	if isblank(content[1]) shift!(content) end
+	
 	# Parse lower-level headings.
-	#
-	if level < 5
+	if level < 4
 		for item in content
-			if isa(item,Node)
-				parse_headings!(item, level+1)
-			end
+			if is(item, :section) parse_sections!(item, level+1) end
 		end
 	end
 	
 	obj.content = content
 end
+
+
+
+# - - - - - - - - - - - + - - - - - - - - - - - #
+#                  B L O C K S                  #
+# - - - - - - - - - - - + - - - - - - - - - - - #
+#function parse_blocks!(obj::Node)
+#	# New content.
+#	content = Item[]
+#	
+#	# Types of block.
+#	comment = r"^////"
+#	example = r"^===="
+#	literal = r"^...."
+#	listing = r"^----"
+#	sidebar = r"^****"
+#	verse = r"^____"
+#	table = r"^!==="
+#end
