@@ -58,7 +58,7 @@ append!(node::Node,item::Item) = push!(node.content, item)
 #
 # This function parses a JuliaDoc string and returns an object.
 #
-function JDoc(docstr::String)
+function parse_jdoc(docstr::String)
 	
 	root = Node(:root, docstr)
 	
