@@ -2,18 +2,37 @@
 
 === jdoc
 
-This program extracts all the docstrings (i.e. triple-quoted
-strings) out of a Julia file, respecting `include` directives.
-Goals for the future include:
+WARNING: Work in progress.
 
-* Command-line `jdoc example.jl` program.
+This is a command-line program that extract all the docstrings out of
+a Julia file (respecting `include` directives) to help produce manuals.
+The program is a work in progress, but here is the intended API:
 
-* `jdoc example.jl` should produce a pager similar to man pages or `perldoc`.
+* `jdoc --raw` prints the unprocessed raw docstring. This allows users to
+use an external program to process the docstring. Thus, users can use any
+markup, like LaTeX, ReST or raw HTML.
 
-* Add some support for markup formats (e.g. Asciidoc, Markdown, ReST, LaTeX)
-  using external programs.
+* `jdoc` includes the *JDoc* markup format. JDoc is a subset of Asciidoc.
+It is simpler, has a short learning curve, and is well suited for writing
+program documentation. With it, `jdoc` can output other formats like HTML,
+without requiring external programs.
 
-* Add support for the `@doc` macro, implemented in the `Doc.jl` module.
+
+This is how I intend `jdoc` to work:
+
+----
+jdoc example.jl         --  Pager, similar to man pages or perloc.
+jdoc --raw  example.jl  --  Output raw docstring.
+jdoc --html exampe.jl   --  Output HTML.
+----
+
+I also want to think about how `jdoc` should support the `@doc` macro
+provided by the JDoc.jl module.
+
+==== TOO
+
+* Review the API so that the key features of the program can be
+  accessed through the JDoc.jl module.
 """
 
 # 
