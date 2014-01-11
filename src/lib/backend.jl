@@ -4,7 +4,7 @@
 
 The backend defines the contents of the global `DOC` object, and how the
 `help()` and `apropos()` functions look inside that object. In this way,
-the backend determines how the frontend macro--`@doc`--needs to populate
+the backend determines how the frontend macro--`@jdoc`--needs to populate
 the `DOC` object.
 
 `DOC` is a global dictionary of type `DocDict`. The keys are string

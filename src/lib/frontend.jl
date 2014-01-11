@@ -2,16 +2,16 @@
 
 === Frontend
 
-The frontend provides the `@doc` macro, and nothing more. The job of `@doc`
+The frontend provides the `@jdoc` macro, and nothing more. The job of `@jdoc`
 is to populate the global `DOC` object correctly, so that the `help()` and
 `apropos()` functions will behave correctly.
 
-==== Usage of `@doc` macro
+==== Usage of `@jdoc` macro
 
-@doc '...' function foo(x::Real) ... end
-@doc '...' macro foo(x::Real) ... end
-@doc '...' foo(x::Real) = ...
-@doc '...' foo
+@jdoc '...' function foo(x::Real) ... end
+@jdoc '...' macro foo(x::Real) ... end
+@jdoc '...' foo(x::Real) = ...
+@jdoc '...' foo
 
 ==== AsciiDoc
 
@@ -22,14 +22,14 @@ TOO: Rewrite `newdoc` with a call to the JDoc parser, or similar.
 
 """
 
-export @doc
+export @jdoc
 
 # 
 # :( function foo(x::Real) 3x end ).args[1] == :( foo(x::Real) )
 # :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )
 # :( foo )                                  == :foo
 # 
-macro doc(s,f)
+macro jdoc(s,f)
 	if typeof(f) == Expr # Expr -> Method Name
 		key = string(f.args[1])
 		key = key[3:end-1] # Remove the surounding ":(" and ")"

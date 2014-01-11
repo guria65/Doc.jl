@@ -26,7 +26,7 @@ jdoc --raw  example.jl  --  Output raw docstring.
 jdoc --html exampe.jl   --  Output HTML.
 ----
 
-I also want to think about how `jdoc` should support the `@doc` macro
+I also want to think about how `jdoc` should support the `@jdoc` macro
 provided by the JDoc.jl module.
 
 ==== TOO
