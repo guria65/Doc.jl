@@ -17,5 +17,6 @@ include("lib/frontend.jl")
 """
 include("lib/readdoc.jl")
 include("lib/parser.jl")
+include("lib/to_tree.jl")
 
 end
