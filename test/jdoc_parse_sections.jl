@@ -33,3 +33,20 @@ Hello
 """
 @test_throws JDoc.parse_jdoc(docstr).content[1].meta[:revision] # No revision.
 
+docstr = """
+= Title
+Daniel Carrera
+
+Hello
+"""
+@test JDoc.parse_jdoc(docstr).content[1].meta[:author] == "Daniel Carrera"
+
+docstr = """
+= Title
+Daniel Carrera
+v1.0.13
+
+Hello
+"""
+@test JDoc.parse_jdoc(docstr).content[1].meta[:revision] == "v1.0.13"
+
