@@ -31,36 +31,38 @@ parsed documentation. The next step is to parse JuliaDoc into
 this data structure and then convert to other formats like HTML.
 """
 
-type Node
+export parse_jdoc, JNode
+
+type JNode
 	tag::Symbol
-	content::Array{Union(Node,String)}
+	content::Array{Union(JNode,String)}
 	meta::Dict
 	
-	Node(tag)            = new(tag,Item[],Dict())
-	Node(tag,meta::Dict) = new(tag,Item[],meta)
-	Node(tag,str::String)      = new(tag,mysplit(str),Dict())
-	Node(tag,str::String,meta) = new(tag,mysplit(str),meta)
+	JNode(tag)            = new(tag,Item[],Dict())
+	JNode(tag,meta::Dict) = new(tag,Item[],meta)
+	JNode(tag,str::String)      = new(tag,mysplit(str),Dict())
+	JNode(tag,str::String,meta) = new(tag,mysplit(str),meta)
 end
 
-typealias Item Union(Node,String)
+typealias Item Union(JNode,String)
 
 #
 # Convenience functions.
 #
-is(obj,tag) = typeof(obj) == Node && obj.tag == tag
+is(obj,tag) = isa(obj, JNode) && obj.tag == tag
 
 mysplit(str)  = split(str, "\n", true) # Retain blank lines.
 myjoin(lines) = join(lines, "\n")      # Undo mysplit().
 
-isblank(node::Node) = all(node.content .== "")
-append!(node::Node,item::Item) = push!(node.content, item)
+isblank(node::JNode) = all(node.content .== "")
+append!(node::JNode,item::Item) = push!(node.content, item)
 
 #
 # This function parses a JuliaDoc string and returns an object.
 #
 function parse_jdoc(docstr::String)
 	
-	root = Node(:root, docstr)
+	root = JNode(:root, docstr)
 	
 	#parse_blocks!(root)
 	parse_sections!(root)
@@ -72,11 +74,11 @@ end
 # - - - - - - - - - - - + - - - - - - - - - - - #
 #                S E C T I O N S                #
 # - - - - - - - - - - - + - - - - - - - - - - - #
-function parse_sections!(obj::Node, level::Integer=0)
+function parse_sections!(obj::JNode, level::Integer=0)
 	#
 	# All sections begin with a (possibly empty) preamble.
 	#
-	content = Item[ Node(:preamble) ]
+	content = Item[ JNode(:preamble) ]
 	heading = Regex("^={$(level+1)}\s*([^=].*)\$")
 	
 	#
@@ -90,7 +92,7 @@ function parse_sections!(obj::Node, level::Integer=0)
 				:level => level,
 				:title => strip(match(heading, item).captures[1])
 			}
-			push!(content, Node(:section,meta) )
+			push!(content, JNode(:section,meta) )
 		else
 			# Add (string|block) to the current (section|preamble).
 			append!(content[end], item)
@@ -136,7 +138,7 @@ end
 # - - - - - - - - - - - + - - - - - - - - - - - #
 #                  B L O C K S                  #
 # - - - - - - - - - - - + - - - - - - - - - - - #
-#function parse_blocks!(obj::Node)
+#function parse_blocks!(obj::JNode)
 #	# New content.
 #	content = Item[]
 #	

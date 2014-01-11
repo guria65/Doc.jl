@@ -2,6 +2,8 @@ using Base.Test
 
 include("../src/JDoc.jl")
 
+using JDoc
+
 tests = ["parse_sections"]
 
 for t in tests
