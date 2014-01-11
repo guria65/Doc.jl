@@ -171,14 +171,20 @@ function parse_sections!(obj::JNode, level::Integer=0)
 		end
 	end
 	
-	# Remove blank preamble -- always true for level-0.
-	if isblank(content[1]) shift!(content) end
-	
 	# Parse lower-level headings.
 	if level < 4
 		for item in content
 			if is(item, :section) parse_sections!(item, level+1) end
 		end
+	end
+	
+	#
+	# Manage preambles.
+	#
+	if isblank(content[1])
+		shift!(content) # Remove blank preambles (always for level-0).
+	elseif length(content) == 1
+		content = content[1].content # Remove needless nesting into preambles.
 	end
 	
 	obj.content = content
