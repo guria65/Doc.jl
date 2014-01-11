@@ -80,14 +80,14 @@ function parse_blocks!(obj::JNode)
 	
 	# Types of block.
 	function query(str, q)
-		if beginswith(str, "....") return (q? :literal : :verbatim) end
-		if beginswith(str, "----") return (q? :listing : :verbatim) end
-		if beginswith(str, "====") return (q? :example : :normal  ) end
-		if beginswith(str, "****") return (q? :sidebar : :normal  ) end
-		if beginswith(str, "____") return (q? :verse   : :normal  ) end
-		if beginswith(str, "////") return (q? :comment : :other   ) end
-		if beginswith(str, "!===") return (q? :table   : :other   ) end
-		if beginswith(str, "++++") return (q? :pass    : :other   ) end
+		if str == "...."  return (q? :literal : :verbatim)  end
+		if str == "----"  return (q? :listing : :verbatim)  end
+		if str == "===="  return (q? :example : :normal  )  end
+		if str == "****"  return (q? :sidebar : :normal  )  end
+		if str == "____"  return (q? :verse   : :normal  )  end
+		if str == "////"  return (q? :comment : :other   )  end
+		if str == "!==="  return (q? :table   : :other   )  end
+		if str == "++++"  return (q? :pass    : :other   )  end
 		return :none
 	end
 	block(str) = query(str, true)
