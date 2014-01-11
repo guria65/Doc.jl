@@ -16,18 +16,18 @@ DOC[f][:description]
 List available metadata with `keys(DOC[f])`. In practice, one should access
 `DOC` only through the provided API:
 
-* The `@doc` macro.
+* The `@jdoc` macro.
 * The `help` and `apropos` functions.
 
-Use `@doc` to add documentation to the online help:
+Use `@jdoc` to add documentation to the online help:
 
 [source]
 ----
 foo(x) = 3x
 
-@doc "Documentation for `foo()`."  foo
+@jdoc "Documentation for `foo()`."  foo
 
-@doc """
+@jdoc """
  :author: Daniel Carrera
 
 Description of how the function works.
