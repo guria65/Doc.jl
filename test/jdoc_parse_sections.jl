@@ -62,21 +62,24 @@ Preamble
 == Section 2
 """
 obj = parse_jdoc(docstr)
+top = obj.content[1]
 
 @test obj.tag == :root
 
-@test obj.content[1].meta[:level] == 0
-@test obj.content[1].content[1].tag == :preamble
-@test obj.content[1].content[2].tag == :section
-@test obj.content[1].content[3].tag == :section
+@test top.meta[:level] == 0
+@test top.content[1].tag == :preamble
+@test top.content[2].tag == :section
+@test top.content[3].tag == :section
 
-@test obj.content[1].content[2].meta[:level] == 1
-@test obj.content[1].content[3].meta[:level] == 1
+@test top.content[2].meta[:level] == 1
+@test top.content[3].meta[:level] == 1
 
-@test obj.content[1].content[2].content[1].tag == :section
-@test obj.content[1].content[2].content[1].meta[:level] == 2
+@test top.content[2].content[1].tag == :section
+@test top.content[2].content[1].meta[:level] == 2
+@test top.content[2].content[1].meta[:title] == "Subsetion 1.1"
 
-@test obj.content[1].content[2].content[1].content[1].tag == :section
-@test obj.content[1].content[2].content[1].content[1].meta[:level] == 3
+@test top.content[2].content[1].content[1].tag == :section
+@test top.content[2].content[1].content[1].meta[:level] == 3
+@test top.content[2].content[1].content[1].meta[:title] == "Subsection 1.1.1"
 
 
