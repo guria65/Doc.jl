@@ -34,14 +34,14 @@ function apropos(s::Union(String,Regex))
 	end
 end
 
-help(m::String) = haskey(DOC,s) ? DOC[s][:description] : apropos(s)
+jhelp(m::String) = haskey(DOC,s) ? DOC[s][:description] : apropos(s)
 
 # 
 # See also: https://github.com/JuliaLang/julia/blob/master/base/methodshow.jl
 #           xdump(Method)
 #           xdump(m.func.code)
 # 
-function help(m::Method)
+function jhelp(m::Method)
 	fun = string(m.func.code.name)
 	sig = match(r"^(\(.+\)) at .*\:\d+", string(m).captures[1])
 	str = fun * sig # Ex: "foo" * "(x::Real)" == "foo(x::Real)"
@@ -49,7 +49,7 @@ function help(m::Method)
 	haskey(DOC,str) ? DOC[str][:description] : help(fun)
 end
 
-function help(f::Function)
+function jhelp(f::Function)
 	s = string(f)
 	
 	if haskey(DOC,s)
