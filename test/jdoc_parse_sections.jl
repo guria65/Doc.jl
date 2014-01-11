@@ -6,14 +6,14 @@ Hello
 
 = My Title
 """
-@test_throws JDoc.parse_jdoc(docstr) # No text allowed before a level-0 section.
+@test_throws parse_jdoc(docstr) # No text allowed before a level-0 section.
 
 docstr = """
 = Title 1
 
 = Title 2
 """
-@test_throws JDoc.parse_jdoc(docstr) # Only one level-0 section allowed.
+@test_throws parse_jdoc(docstr) # Only one level-0 section allowed.
 
 #
 # Test metadata
@@ -25,17 +25,17 @@ v1.0.13
 
 Hello
 """
-@test JDoc.parse_jdoc(docstr).content[1].meta[:level] == 0
-@test JDoc.parse_jdoc(docstr).content[1].meta[:title] == "Title"
-@test JDoc.parse_jdoc(docstr).content[1].meta[:author] == "Daniel Carrera"
-@test JDoc.parse_jdoc(docstr).content[1].meta[:revision] == "v1.0.13"
+@test parse_jdoc(docstr).content[1].meta[:level] == 0
+@test parse_jdoc(docstr).content[1].meta[:title] == "Title"
+@test parse_jdoc(docstr).content[1].meta[:author] == "Daniel Carrera"
+@test parse_jdoc(docstr).content[1].meta[:revision] == "v1.0.13"
 
 docstr = """
 = Title
 
 Hello
 """
-@test_throws JDoc.parse_jdoc(docstr).content[1].meta[:author] # No author.
+@test_throws parse_jdoc(docstr).content[1].meta[:author] # No author.
 
 docstr = """
 = Title
@@ -43,5 +43,38 @@ Daniel Carrera
 
 Hello
 """
-@test_throws JDoc.parse_jdoc(docstr).content[1].meta[:revision] # No revision.
+@test_throws parse_jdoc(docstr).content[1].meta[:revision] # No revision.
+
+#
+# Nesting levels.
+#
+docstr = """
+= Title
+
+Preamble
+
+== Section 1
+
+=== Subsetion 1.1
+
+==== Subsection 1.1.1
+
+== Section 2
+"""
+obj = parse_jdoc(docstr)
+
+@test obj.content[1].meta[:level] == 0
+@test obj.content[1].content[1].tag == :preamble
+@test obj.content[1].content[2].tag == :section
+@test obj.content[1].content[3].tag == :section
+
+@test obj.content[1].content[2].meta[:level] == 1
+@test obj.content[1].content[3].meta[:level] == 1
+
+@test obj.content[1].content[2].content[1].tag == :section
+@test obj.content[1].content[2].content[1].meta[:level] == 2
+
+@test obj.content[1].content[2].content[1].content[1].tag == :section
+@test obj.content[1].content[2].content[1].content[1].meta[:level] == 3
+
 
