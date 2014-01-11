@@ -1,15 +1,22 @@
+"""
+
+=== readdoc
+
+Given an IO stream or file name, this function extracts all the docstrings,
+including those in `include`d files.
+"""
 
 export readdoc
 
 # 
 # Extract docstrings given a file name.
 # 
-function readdoc(filename)
-	io = open(filename)
-	ln = readlines(io)
-	
-	close(io)
-	
+readdoc(filename::String) = readdoc(open(filename))
+
+# 
+# Extract docstrings given an IOStream.
+# 
+function readdoc(io::IOStream)
 	str = join(ln ,"")  # File contents.
 	doc = "" # Docstring.
 	pos = 0  # Position.
