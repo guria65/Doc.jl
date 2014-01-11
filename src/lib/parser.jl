@@ -64,10 +64,61 @@ function parse_jdoc(docstr::String)
 	
 	root = JNode(:root, docstr)
 	
-	#parse_blocks!(root)
+	parse_blocks!(root)
 	parse_sections!(root)
 	
 	return root
+end
+
+
+# - - - - - - - - - - - + - - - - - - - - - - - #
+#                  B L O C K S                  #
+# - - - - - - - - - - - + - - - - - - - - - - - #
+function parse_blocks!(obj::JNode)
+	# New content.
+	content = Item[]
+	
+	# Types of block.
+	function query(str, q)
+		if beginswith(str, "....") return (q? :literal : :verbatim) end
+		if beginswith(str, "----") return (q? :listing : :verbatim) end
+		if beginswith(str, "====") return (q? :example : :normal  ) end
+		if beginswith(str, "****") return (q? :sidebar : :normal  ) end
+		if beginswith(str, "____") return (q? :verse   : :normal  ) end
+		if beginswith(str, "////") return (q? :comment : :other   ) end
+		if beginswith(str, "!===") return (q? :table   : :other   ) end
+		if beginswith(str, "++++") return (q? :pass    : :other   ) end
+		return :none
+	end
+	block(str) = query(str, true)
+	group(str) = query(str, false)
+	inblock = false
+	
+	#
+	# Every item is a line of text.
+	#
+	for line in obj.content
+		if inblock
+			if block(line) == content[end].meta[:style]
+				# End of current block.
+				inblock = false
+			else
+				append!(content[end],line)
+			end
+		else
+			if block(line) == :none
+				push!(content,line)
+			else
+				# Start of a new block.
+				meta = { :style => block(line), :group => group(line) }
+				push!(content, JNode(:block,meta) )
+				inblock = true
+			end
+		end
+	end
+	
+	# Remove comments
+	obj.content = filter(x -> isa(x,String)||x.meta[:style]!=:comment, content)
 end
 
 
@@ -133,21 +184,3 @@ function parse_sections!(obj::JNode, level::Integer=0)
 	obj.content = content
 end
 
-
-
-# - - - - - - - - - - - + - - - - - - - - - - - #
-#                  B L O C K S                  #
-# - - - - - - - - - - - + - - - - - - - - - - - #
-#function parse_blocks!(obj::JNode)
-#	# New content.
-#	content = Item[]
-#	
-#	# Types of block.
-#	comment = r"^////"
-#	example = r"^===="
-#	literal = r"^...."
-#	listing = r"^----"
-#	sidebar = r"^****"
-#	verse = r"^____"
-#	table = r"^!==="
-#end
