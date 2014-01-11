@@ -1,3 +1,5 @@
 using Base.Test
-require("Doc")
+
+include("../src/JDoc.jl")
+
 
