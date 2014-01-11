@@ -63,6 +63,8 @@ Preamble
 """
 obj = parse_jdoc(docstr)
 
+@test obj.tag == :root
+
 @test obj.content[1].meta[:level] == 0
 @test obj.content[1].content[1].tag == :preamble
 @test obj.content[1].content[2].tag == :section
