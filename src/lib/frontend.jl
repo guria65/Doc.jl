@@ -7,17 +7,10 @@ is to populate the global `DOC` object correctly, so that the `help()` and
 
 ==== Usage of `@jdoc` macro
 
-@jdoc '...' function foo(x::Real) ... end
-@jdoc '...' macro foo(x::Real) ... end
-@jdoc '...' foo(x::Real) = ...
-@jdoc '...' foo
+@jdoc \"...\" function foo(x::Real) ... end
+@jdoc \"...\" foo(x::Real) = ...
+@jdoc \"...\" foo
 
-==== AsciiDoc
-
-The only AsciiDoc-dependant part of this module is the interpretation of
-literal blocks in the `newdoc()` function.
-
-TOO: Rewrite `newdoc` with a call to the JDoc parser, or similar.
 """
 
 export @jdoc
