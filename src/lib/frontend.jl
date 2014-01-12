@@ -1,26 +1,26 @@
 doc"
 === Frontend
 
-The frontend provides the `@jdoc` macro, and nothing more. The job of `@jdoc`
+The frontend provides the `@doc` macro, and nothing more. The job of `@doc`
 is to populate the global `DOC` object correctly, so that the `help()` and
 `apropos()` functions will behave correctly.
 
-==== Usage of `@jdoc` macro
+==== Usage of `@doc` macro
 
-@jdoc \"...\" function foo(x::Real) ... end
-@jdoc \"...\" foo(x::Real) = ...
-@jdoc \"...\" foo
+@doc \"...\" function foo(x::Real) ... end
+@doc \"...\" foo(x::Real) = ...
+@doc \"...\" foo
 
 "
 
-export @jdoc
+export @doc
 
 # 
 # :( function foo(x::Real) 3x end ).args[1] == :( foo(x::Real) )
 # :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )
 # :( foo )                                  == :foo
 # 
-macro jdoc(s,e)
+macro doc(s,e)
 	
 	if typeof(e) == Expr
 		# Expr => Get method
