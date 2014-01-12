@@ -85,7 +85,7 @@ function parse_blocks!(obj::JNode)
 		if str == "****"  return (q? :sidebar : :normal  )  end
 		if str == "____"  return (q? :verse   : :normal  )  end
 		if str == "////"  return (q? :comment : :other   )  end
-		if str == "!==="  return (q? :table   : :other   )  end
+		if str == "|==="  return (q? :table   : :other   )  end
 		if str == "++++"  return (q? :pass    : :other   )  end
 		return :none
 	end

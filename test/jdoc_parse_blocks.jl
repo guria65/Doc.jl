@@ -70,10 +70,10 @@ obj = parse_jdoc(docstr)
 @test obj.content[1].content[2] == "Verse line 2"
 
 docstr = """
-!===
+|===
 Table line 1
 Table line 2
-!===
+|===
 """
 obj = parse_jdoc(docstr)
 
