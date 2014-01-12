@@ -1,5 +1,4 @@
 """
-
 === JDoc markup
 
 JDoc is a human-readable markup language. It is a small subset of AsciiDoc,

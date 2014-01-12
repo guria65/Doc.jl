@@ -1,5 +1,4 @@
 """
-
 === Frontend
 
 The frontend provides the `@jdoc` macro, and nothing more. The job of `@jdoc`
@@ -19,7 +18,6 @@ The only AsciiDoc-dependant part of this module is the interpretation of
 literal blocks in the `newdoc()` function.
 
 TOO: Rewrite `newdoc` with a call to the JDoc parser, or similar.
-
 """
 
 export @jdoc

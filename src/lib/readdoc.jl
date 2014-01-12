@@ -1,5 +1,4 @@
 """
-
 === readdoc
 
 Given an IO stream or file name, this function extracts all the docstrings,
@@ -41,7 +40,7 @@ isinclude(expr::Expr) = (expr.head == :call) &
 function expr2doc(expr::Expr)
 	if ismstr(expr)
 		# `eval` needed to run the @mstr macro.
-		doc = eval(expr)
+		doc = "\n" * eval(expr)
 	elseif isinclude(expr)
 		doc = readdoc(expr.args[2])
 	else
