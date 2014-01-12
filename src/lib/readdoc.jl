@@ -17,7 +17,7 @@ readdoc(filename::String) = readdoc(open(filename))
 # Extract docstrings given an IOStream.
 # 
 function readdoc(io::IOStream)
-	str = join(ln ,"")  # File contents.
+	str = join(readlines(io) ,"")  # File contents.
 	doc = "" # Docstring.
 	pos = 0  # Position.
 	
