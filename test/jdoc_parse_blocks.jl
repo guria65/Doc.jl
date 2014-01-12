@@ -59,7 +59,7 @@ ____
 """
 obj = parse_jdoc(docstr)
 
-@test obj.content[1].tag == :verse  
+@test obj.content[1].tag == :passage  
 @test obj.content[1].meta[:group] == :normal  
 @test obj.content[1].content[1] == "Verse line 1"
 @test obj.content[1].content[2] == "Verse line 2"
