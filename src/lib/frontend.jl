@@ -75,7 +75,7 @@ end
 #
 function newdoc(str)
 	entry = DocEntry()
-	entry[:description] = str
+	entry[:doc] = str
 	
 	return entry
 end
