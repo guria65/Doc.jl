@@ -67,6 +67,11 @@ macro jdoc(s,e)
 	
 	docstr   = typeof(s) == Expr ? eval(s) : s
 	DOC[key] = newdoc(docstr)
+	
+	#
+	# Finally, run the function declaration.
+	#
+	:($(esc(e)))
 end
 
 
