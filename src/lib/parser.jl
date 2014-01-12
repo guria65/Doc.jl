@@ -98,7 +98,7 @@ function parse_blocks!(obj::JNode)
 	#
 	for line in obj.content
 		if inblock
-			if block(line) == content[end].meta[:style]
+			if block(line) == content[end].tag
 				# End of current block.
 				inblock = false
 			else
@@ -109,15 +109,15 @@ function parse_blocks!(obj::JNode)
 				push!(content,line)
 			else
 				# Start of a new block.
-				meta = { :style => block(line), :group => group(line) }
-				push!(content, JNode(:block,meta) )
+				meta = { :group => group(line) }
+				push!(content, JNode(block(line),meta) )
 				inblock = true
 			end
 		end
 	end
 	
 	# Remove comments
-	obj.content = filter(x -> isa(x,String)||x.meta[:style]!=:comment, content)
+	obj.content = filter(x -> isa(x,String) || x.tag != :comment, content)
 end
 
 
