@@ -17,8 +17,8 @@ export DOC, DocEntry, DocDict
 
 import Base: help, apropos
 
-typealias DocEntry Dict{Symbol,String}
-typealias DocDict  Dict{String,DocEntry}
+typealias DocEntry Dict{Any,Any}
+typealias DocDict  Dict{Any,DocEntry}
 
 DOC = DocDict()
 

@@ -27,13 +27,42 @@ export @jdoc
 # :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )
 # :( foo )                                  == :foo
 # 
-macro jdoc(s,f)
-	if typeof(f) == Expr # Expr -> Method Name
-		key = string(f.args[1])
-		key = key[3:end-1] # Remove the surounding ":(" and ")"
-		eval(f)
+macro jdoc(s,e)
+	
+	if typeof(e) == Expr
+		# Expr => Get method
+		
+		#
+		# e.head                   is  :(=) or :function
+		# e.args[1]                is  :(foo(x,y::Real))
+		# e.args[1].head           is  :call
+		# e.args[1].args[1]        is  :foo
+		# e.args[1].args[2:end]    is  [ :x , :(y::Real) ]
+		#
+		params = e.args[1].args[2:end]
+		
+		#
+		# Get the signature as a tuple.
+		#
+		sig = map( x -> isa(x,Expr) ? x.args[2] : Any , params)
+		sig = tuple(sig...)          # Convert [DataType,... ] -> (Symbol,...)
+		sig = map(x -> eval(x), sig) # Convert (Symbol,...)    -> (DataType,...)
+		
+		#
+		# Method list -- all methods that match the signature.
+		#
+		func = eval(e)  # Function.
+		ml = methods(func, sig)
+		ml = filter(m -> m.sig == sig, ml)
+				
+		#
+		# The last man standing should be the correct method.
+		#
+		key = ml[1]
 	else
-		key = string(f)  # Symbol -> Function Name
+		# Symbol => Get function
+		
+		key = eval(e)
 	end
 	
 	docstr   = typeof(s) == Expr ? eval(s) : s
@@ -42,39 +71,11 @@ end
 
 
 #
-# Creates a DocEntry object and pulls out the metadata.
-# 
-# -- Next step is to parse entry[:description] as Asciidoc.
+# TODO: Parse the docstring and extract any metadata.
 #
 function newdoc(str)
 	entry = DocEntry()
-	entry[:docstring] = str
-	entry[:description] = ""
-	
-	# Helpers.
-	ismeta,    meta    = false, r"^:(\w+):\s*"
-	isliteral, literal = false, r"^----"
-	
-	# Read the docstring line-by-line.
-	for line in split(str,"\n")
-		
-		# Skip literal blocks.
-		ismeta = false
-		if isliteral
-			# Test for the end of the litral block.
-			isliteral = !ismatch(literal, line)
-		else
-			if ismatch(meta, line)
-				key = match(meta,line).captures[1]
-				val = replace(line,meta,"")
-				entry[symbol(key)] = val
-				ismeta = true
-			elseif ismatch(literal, line)
-				isliteral = true
-			end
-		end
-		entry[:description] *= ismeta ? "" : line * "\n"
-	end
+	entry[:description] = str
 	
 	return entry
 end
