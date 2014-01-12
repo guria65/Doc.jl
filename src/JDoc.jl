@@ -23,5 +23,6 @@ doc"
 include("lib/readdoc.jl")
 include("lib/parser.jl")
 include("lib/to_tree.jl")
+include("lib/to_html.jl")
 
 end
