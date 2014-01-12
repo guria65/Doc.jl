@@ -7,9 +7,11 @@ is to populate the global `DOC` object correctly, so that the `help()` and
 
 ==== Usage of `@doc` macro
 
+----
 @doc \"...\" function foo(x::Real) ... end
 @doc \"...\" foo(x::Real) = ...
 @doc \"...\" foo
+----
 
 "
 
