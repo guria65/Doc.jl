@@ -1,9 +1,9 @@
 
-"""
+doc"
 === to_tree
 
 Convert a parsed JDoc object into a string, formatted as a s-expression.
-"""
+"
 
 export to_tree
 

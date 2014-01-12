@@ -1,5 +1,4 @@
-"""
-
+doc"
 === Backend
 
 The backend defines the contents of the global `DOC` object, and how the
@@ -11,7 +10,7 @@ the `DOC` object.
 representations of functions, methods or other Julia objects. The values
 are `DocEntry` objects which themselves are dictionaries, indexed by
 symbols such as `:author`, `:date` and `:description`.
-"""
+"
 
 export DOC, DocEntry, DocDict
 

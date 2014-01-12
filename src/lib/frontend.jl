@@ -1,4 +1,4 @@
-"""
+doc"
 === Frontend
 
 The frontend provides the `@jdoc` macro, and nothing more. The job of `@jdoc`
@@ -11,7 +11,7 @@ is to populate the global `DOC` object correctly, so that the `help()` and
 @jdoc \"...\" foo(x::Real) = ...
 @jdoc \"...\" foo
 
-"""
+"
 
 export @jdoc
 
