@@ -86,6 +86,16 @@ function root_to_html(obj)
 end
 
 #
+# Paragraphs
+#
+function para_to_html(obj)
+	class = obj.meta[:style]
+	html  = to_html(obj.content)
+	
+	class == :para ? "<p>$html</p>\n" : "<div class='$class'>\n$html\n</div>\n"
+end
+
+#
 # Normal blocks
 #
 function normal_to_html(obj)
