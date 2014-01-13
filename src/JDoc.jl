@@ -38,7 +38,7 @@ str = readdoc(\"example.jl\")
 
 doc = jdoc(str)
 
-println( reprmime(::MIME\"text/html\", doc) )
+println( reprmime(\"text/html\", doc) )
 ----
 
 "
