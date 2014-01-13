@@ -103,9 +103,6 @@ typealias Item Union(JNode,String)
 #
 is(obj,tag) = isa(obj,JNode) && obj.tag == tag
 
-recurse(obj::JNode) = !(is(obj,:literal) || is(obj,:listing) || is(obj,:pass))
-recurse(other) = false
-
 mysplit(str)  = split(str, "\n", true) # Retain blank lines.
 myjoin(lines) = join(lines, "\n")      # Undo mysplit().
 
@@ -154,8 +151,11 @@ function parse_paragraphs!(obj::JNode)
 		l = label(str)
 		l == "" ? str : lstrip(replace(str,l,"",1))
 	end
-	inpara = false
 	
+	recurse(obj::JNode) = !in(obj.tag, [:literal, :listing, :pass, :table])
+	recurse(other) = false
+	
+	inpara = false
 	for item in obj.content
 		if para(item) == :none
 			recurse(item) && parse_paragraphs!(item)
