@@ -77,10 +77,6 @@ IMPORTANT: This is a paragraph.
   Comment line 2
   ////
 ----
-
-TIP: I have also implemented a basic tree data structure to hold the
-parsed documentation. The next step is to parse JuliaDoc into
-this data structure and then convert to other formats like HTML.
 "
 
 export parse_jdoc, JNode
