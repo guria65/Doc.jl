@@ -9,6 +9,7 @@ export @doc_str, @doc_mstr
 doc"
 = JDoc.jl
 Daniel Carrera
+v0.1 alpha
 
 Documentation system for Julia.
 
