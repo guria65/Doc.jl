@@ -79,38 +79,38 @@ IMPORTANT: This is a paragraph.
 ----
 "
 
-export parse_jdoc, JNode
+export parse_jdoc, DocNode
 
-type JNode
+type DocNode
 	tag::Symbol
-	content::Array{Union(JNode,String)}
+	content::Array{Union(DocNode,String)}
 	meta::Dict
 	
-	JNode(tag)            = new(tag,Item[],Dict())
-	JNode(tag,meta::Dict) = new(tag,Item[],meta)
-	JNode(tag,str::String)      = new(tag,mysplit(str),Dict())
-	JNode(tag,str::String,meta) = new(tag,mysplit(str),meta)
+	DocNode(tag)            = new(tag,Item[],Dict())
+	DocNode(tag,meta::Dict) = new(tag,Item[],meta)
+	DocNode(tag,str::String)      = new(tag,mysplit(str),Dict())
+	DocNode(tag,str::String,meta) = new(tag,mysplit(str),meta)
 end
 
-typealias Item Union(JNode,String)
+typealias Item Union(DocNode,String)
 
 #
 # Convenience functions.
 #
-is(obj,tag) = isa(obj,JNode) && obj.tag == tag
+is(obj,tag) = isa(obj,DocNode) && obj.tag == tag
 
 mysplit(str)  = split(str, "\n", true) # Retain blank lines.
 myjoin(lines) = join(lines, "\n")      # Undo mysplit().
 
-isblank(node::JNode) = all(node.content .== "")
-append!(node::JNode,item::Item) = push!(node.content, item)
+isblank(node::DocNode) = all(node.content .== "")
+append!(node::DocNode,item::Item) = push!(node.content, item)
 
 #
 # This function parses a JuliaDoc string and returns an object.
 #
 function parse_jdoc(docstr::String)
 	
-	root = JNode(:root, docstr)
+	root = DocNode(:root, docstr)
 	
 	parse_blocks!(root)
 	parse_sections!(root)
@@ -123,12 +123,12 @@ end
 # - - - - - - - - - - - + - - - - - - - - - - - #
 #              P A R A G R A P H S              #
 # - - - - - - - - - - - + - - - - - - - - - - - #
-function parse_paragraphs!(obj::JNode)
+function parse_paragraphs!(obj::DocNode)
 	# New content.
 	content = Item[]
 	
 	# Paragraph types and labels.
-	query(node::JNode,q) = q ? :none : ""
+	query(node::DocNode,q) = q ? :none : ""
 	function query(str::String,q)
 		beginswith(str,"TIP:"      ) && return q ? :tip       : "TIP:"      
 		beginswith(str,"NOTE:"     ) && return q ? :note      : "NOTE:"     
@@ -148,7 +148,7 @@ function parse_paragraphs!(obj::JNode)
 		l == "" ? str : lstrip(replace(str,l,"",1))
 	end
 	
-	recurse(obj::JNode) = !in(obj.tag, [:literal, :listing, :pass, :table])
+	recurse(obj::DocNode) = !in(obj.tag, [:literal, :listing, :pass, :table])
 	recurse(other) = false
 	
 	inpara = false
@@ -163,7 +163,7 @@ function parse_paragraphs!(obj::JNode)
 				append!(content[end],item)
 			else
 				# New pararaph.
-				push!(content, JNode(:para,{:style => para(item)}) )
+				push!(content, DocNode(:para,{:style => para(item)}) )
 				append!(content[end], rmlabel(item) )
 				inpara = true
 			end
@@ -178,7 +178,7 @@ end
 #                  B L O C K S                  #
 # - - - - - - - - - - - + - - - - - - - - - - - #
 
-function parse_blocks!(obj::JNode)
+function parse_blocks!(obj::DocNode)
 	# New content.
 	content = Item[]
 	
@@ -215,7 +215,7 @@ function parse_blocks!(obj::JNode)
 			else
 				# Start of a new block.
 				meta = { :group => group(line) }
-				push!(content, JNode(block(line),meta) )
+				push!(content, DocNode(block(line),meta) )
 				inblock = true
 			end
 		end
@@ -229,11 +229,11 @@ end
 # - - - - - - - - - - - + - - - - - - - - - - - #
 #                S E C T I O N S                #
 # - - - - - - - - - - - + - - - - - - - - - - - #
-function parse_sections!(obj::JNode, level::Integer=0)
+function parse_sections!(obj::DocNode, level::Integer=0)
 	#
 	# All sections begin with a (possibly empty) preamble.
 	#
-	content = Item[ JNode(:preamble) ]
+	content = Item[ DocNode(:preamble) ]
 	heading = Regex("^={$(level+1)}\s*([^=].*)\$")
 	
 	#
@@ -247,7 +247,7 @@ function parse_sections!(obj::JNode, level::Integer=0)
 				:level => level,
 				:title => strip(match(heading, item).captures[1])
 			}
-			push!(content, JNode(:section,meta) )
+			push!(content, DocNode(:section,meta) )
 		else
 			# Add (string|block) to the current (section|preamble).
 			append!(content[end], item)
