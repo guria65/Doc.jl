@@ -110,7 +110,7 @@ append!(node::DocNode,item::Item) = push!(node.content, item)
 #
 function jdoc(docstr::String)
 	
-	root = DocNode(:root, docstr)
+	root = DocNode(:root, docstr, {:docstr => docstr})
 	
 	parse_blocks!(root)
 	parse_sections!(root)
