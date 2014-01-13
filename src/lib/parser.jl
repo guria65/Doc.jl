@@ -11,7 +11,8 @@ http://asciidoc.org[asciidoc] and http://asciidoctor.org[Asciidoctor].
 
 === Status
 
-I can currently parse the simplest type of heading:
+The current parser can read headings, most block types (tables are passed
+verbatim), and all paragraph types (NOTE, TIP, WARNING, etc.).
 
 ----
 = Head 1
@@ -23,9 +24,61 @@ I can currently parse the simplest type of heading:
 ==== Head 4
 
 ===== Head 5
+
+This is a paragraph.
+
+TIP: This is a paragraph.
+
+NOTE: This is a paragraph.
+
+WARNING: This is a paragraph.
+
+CAUTION: This is a paragraph.
+
+IMPORTANT: This is a paragraph.
+
+  ....
+  Literal line 1
+  Literal line 2
+  ....
+  
+  ----
+  Listing line 1
+  Listing line 2
+  ----
+  
+  ====
+  Example line 1
+  Example line 2
+  ====
+  
+  ****
+  Sidebar line 1
+  Sidebar line 2
+  ****
+  
+  ____
+  Verse line 1
+  Verse line 2
+  ____
+  
+  |===
+  Table line 1
+  Table line 2
+  |===
+  
+  ++++
+  Pass line 1
+  Pass line 2
+  ++++
+  
+  ////
+  Comment line 1
+  Comment line 2
+  ////
 ----
 
-I have also implemented a basic tree data structure to hold the
+TIP: I have also implemented a basic tree data structure to hold the
 parsed documentation. The next step is to parse JuliaDoc into
 this data structure and then convert to other formats like HTML.
 "
@@ -48,7 +101,10 @@ typealias Item Union(JNode,String)
 #
 # Convenience functions.
 #
-is(obj,tag) = isa(obj, JNode) && obj.tag == tag
+is(obj,tag) = isa(obj,JNode) && obj.tag == tag
+
+recurse(obj::JNode) = !(is(obj,:literal) || is(obj,:listing) || is(obj,:pass))
+recurse(other) = false
 
 mysplit(str)  = split(str, "\n", true) # Retain blank lines.
 myjoin(lines) = join(lines, "\n")      # Undo mysplit().
@@ -65,14 +121,67 @@ function parse_jdoc(docstr::String)
 	
 	parse_blocks!(root)
 	parse_sections!(root)
+	parse_paragraphs!(root)
 	
 	return root
 end
 
 
 # - - - - - - - - - - - + - - - - - - - - - - - #
+#              P A R A G R A P H S              #
+# - - - - - - - - - - - + - - - - - - - - - - - #
+function parse_paragraphs!(obj::JNode)
+	# New content.
+	content = Item[]
+	
+	# Paragraph types and labels.
+	query(node::JNode,q) = q ? :none : ""
+	function query(str::String,q)
+		beginswith(str,"TIP:"      ) && return q ? :tip       : "TIP:"      
+		beginswith(str,"NOTE:"     ) && return q ? :note      : "NOTE:"     
+		beginswith(str,"WARNING:"  ) && return q ? :warning   : "WARNING:"  
+		beginswith(str,"CAUTION:"  ) && return q ? :caution   : "CAUTION:"  
+		beginswith(str,"IMPORTANT:") && return q ? :important : "IMPORTANT:"
+		
+		ismatch(r"^\s*$", str) && return q ? :none : error("No label")
+		return q ? :para : ""
+	end
+	para(obj)  = query(obj,true)
+	label(str) = query(str,false)
+	
+	# Remove the first occurrence of the label, and trailing spaces.
+	function rmlabel(str::String)
+		l = label(str)
+		l == "" ? str : lstrip(replace(str,l,"",1))
+	end
+	inpara = false
+	
+	for item in obj.content
+		if para(item) == :none
+			recurse(item) && parse_paragraphs!(item)
+			push!(content,item)
+			inpara = false
+		else
+			# Is a string, and not blank.
+			if inpara
+				append!(content[end],item)
+			else
+				# New pararaph.
+				push!(content, JNode(:para,{:style => para(item)}) )
+				append!(content[end], rmlabel(item) )
+				inpara = true
+			end
+		end
+	end
+	
+	obj.content = content
+end
+
+
+# - - - - - - - - - - - + - - - - - - - - - - - #
 #                  B L O C K S                  #
 # - - - - - - - - - - - + - - - - - - - - - - - #
+
 function parse_blocks!(obj::JNode)
 	# New content.
 	content = Item[]
