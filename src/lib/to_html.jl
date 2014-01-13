@@ -1,12 +1,4 @@
 
-doc"
-=== to_html
-
-Convert a parsed JDoc object into HTML.
-"
-
-export to_html
-
 typealias Value Union(Number,String)
 
 #

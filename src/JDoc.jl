@@ -26,5 +26,25 @@ include("lib/parser.jl")
 include("lib/to_dump.jl")
 include("lib/to_html.jl")
 
+doc"
+== API
+
+Basic ussage:
+
+----
+using JDoc
+
+str = readdoc(\"example.jl\")
+
+doc = jdoc(str)
+
+println( reprmime(::MIME\"text/html\", doc) )
+----
+
+"
+
+Base.writemime(stream, ::MIME"text/html", doc::DocNode) = to_html(doc)
+Base.writemime(stream, ::MIME"text/dump", doc::DocNode) = to_dump(doc)
+
 
 end
