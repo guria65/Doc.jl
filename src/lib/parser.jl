@@ -79,7 +79,7 @@ IMPORTANT: This is a paragraph.
 ----
 "
 
-export parse_jdoc, DocNode
+export jdoc, DocNode
 
 type DocNode
 	tag::Symbol
@@ -108,7 +108,7 @@ append!(node::DocNode,item::Item) = push!(node.content, item)
 #
 # This function parses a JuliaDoc string and returns an object.
 #
-function parse_jdoc(docstr::String)
+function jdoc(docstr::String)
 	
 	root = DocNode(:root, docstr)
 	
