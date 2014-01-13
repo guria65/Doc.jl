@@ -4,7 +4,7 @@ include("../src/JDoc.jl")
 
 using JDoc
 
-tests = [ "parse_sections", "parse_blocks" ]
+tests = [ "parse_sections", "parse_paragraphs", "parse_blocks" ]
 
 for t in tests
     println("Running jdoc_$t ...")
