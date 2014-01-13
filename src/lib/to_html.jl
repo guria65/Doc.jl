@@ -12,9 +12,9 @@ typealias Value Union(Number,String)
 #
 # Functions named after the object tag: $(tag)_to_html
 #
-to_html(val::Value) = string(val)
-to_html(arr::Array) = join( map(to_html,arr) ,"\n" )
-to_html(obj::JNode) = @eval $(symbol(string(obj.tag) * "_to_html"))( $(obj) )
+to_html(val::Value)   = string(val)
+to_html(arr::Array)   = join( map(to_html,arr) ,"\n" )
+to_html(obj::DocNode) = @eval $(symbol(string(obj.tag) * "_to_html"))( $(obj) )
 
 #
 # Nothing-to-do sections.

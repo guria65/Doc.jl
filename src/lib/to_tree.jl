@@ -20,7 +20,7 @@ function to_tree(arr::Array,indent=0)
 	sp * join(map(x -> to_tree(x,indent),arr),"\n"*sp)
 end
 
-function to_tree(obj::JNode,indent=0)
+function to_tree(obj::DocNode,indent=0)
 	
 	sp = " "^indent
 	
