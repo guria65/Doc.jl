@@ -12,20 +12,9 @@ Daniel Carrera
 v0.1 alpha
 
 Documentation system for Julia.
-
-== Online help
 "
-include("lib/backend.jl")
-include("lib/frontend.jl")
 
-doc"
-== Writing manuals
-"
-include("lib/readdoc.jl")
-include("lib/parser.jl")
-include("lib/to_dump.jl")
-include("lib/to_html.jl")
-
+########################################
 doc"
 == API
 
@@ -40,14 +29,27 @@ doc = jdoc(str)
 
 println( reprmime(\"text/html\", doc) )
 ----
-
 "
-
 import Base: writemime
 
 writemime(io, ::MIME"text/plain", doc::DocNode) = write(io, doc.meta[:docstr])
 writemime(io, ::MIME"text/html" , doc::DocNode) = write(io, to_html(doc)  )
 writemime(io, ::MIME"text/dump" , doc::DocNode) = write(io, to_dump(doc)  )
 
+########################################
+doc"
+== Writing manuals
+"
+include("lib/backend.jl")
+include("lib/frontend.jl")
+
+########################################
+doc"
+== Writing manuals
+"
+include("lib/readdoc.jl")
+include("lib/parser.jl")
+include("lib/to_dump.jl")
+include("lib/to_html.jl")
 
 end
