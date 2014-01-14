@@ -87,9 +87,9 @@ to convert documentation objects into other formats. Currently supported
 MIME types include:
 
 |===
-|text/plain | Raw docstring without any proessing.
-|text/html  | Convert to HTML.
-|text/dump  | Produce a dump tree useful for debugging.
+|`text/plain` | Raw docstring without any proessing.
+|`text/html`  | Convert to HTML.
+|`text/dump`  | Produce a dump tree useful for debugging.
 |===
 "
 import Base: writemime
@@ -105,6 +105,22 @@ include("lib/help.jl")
 ########################################
 doc"
 === Writing manuals
+
+==== Command-lin program: `jdoc`
+
+This module includes a short script called `jdoc`, which uses the API described
+above to extract and process documentation in Julia files. The program can print
+the original raw string, or convert it to supported formats.
+
+----
+jdoc example.jl          # Output raw docstring.
+jdoc --plain example.jl  # Output raw docstring.
+jdoc --html  exampe.jl   # Output HTML.
+----
+
+If the program receives two arguments, the first argument is interpreted as
+the mimetype, so that `jdoc --foo` converts docstrings to `\"text/foo\"`.
+See the API section for supported mimetypes.
 "
 include("lib/readdoc.jl")
 include("lib/parser.jl")
