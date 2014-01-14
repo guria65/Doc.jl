@@ -1,27 +1,34 @@
 doc"
-=== Frontend
+== Online help
 
-The frontend provides the `@doc` macro, and nothing more. The job of `@doc`
-is to populate the global `DOC` object correctly, so that the `help()` and
-`apropos()` functions will behave correctly.
-
-==== Usage of `@doc` macro
+Use to `@doc` macro to add entries to the online help. You can use `@doc`
+to document methods, functions, constants, and other Julia objects.
 
 ----
-@doc \"...\" function foo(x::Real) ... end
-@doc \"...\" foo(x::Real) = ...
-@doc \"...\" foo
+@doc \"About method foo(x::Int) ...\" function foo(x::Int) ... end
+@doc \"About method foo(x::Real) ...\" foo(x::Real) = ...
+@doc \"About object foo ...\" foo
 ----
 
+=== backend
+
+The documentation is stored in a global dictionary object called `DOC`.
+The `help()` function looks up values inside `DOC`. You should not modify
+`DOC` directly unless you know what you are doing. The keys are arbitrary
+Julia objects and the values are dictionaries. The main documentation
+should be in `DOC[obj][:doc]`.
 "
 
-export @doc
+import Base: help
 
-# 
-# :( function foo(x::Real) 3x end ).args[1] == :( foo(x::Real) )
-# :( foo(x::Real)  = 3x + x^2 - 4 ).args[1] == :( foo(x::Real) )
-# :( foo )                                  == :foo
-# 
+typealias DocEntry Dict{Any,Any}
+typealias DocDict  Dict{Any,DocEntry}
+
+DOC = DocDict()
+
+help(key) = show(haskey(DOC,key) ? DOC[key][:doc] : "No help for `$key`")
+
+
 macro doc(s,e)
 	
 	if typeof(e) == Expr

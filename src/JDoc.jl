@@ -1,6 +1,9 @@
 module JDoc
 
-export @doc_str, @doc_mstr, jdoc, DocNode
+export DOC, DocEntry, DocDict
+export @doc, @doc_str, @doc_mstr
+export jdoc, DocNode
+
 
 # String macros -- Sole purpose is to denote docstrings.
 macro doc_str(str)   str  end
@@ -48,11 +51,8 @@ writemime(io, ::MIME"text/html" , doc::DocNode) = write(io, to_html(doc)  )
 writemime(io, ::MIME"text/dump" , doc::DocNode) = write(io, to_dump(doc)  )
 
 ########################################
-doc"
-== Writing manuals
-"
-include("lib/backend.jl")
-include("lib/frontend.jl")
+
+include("lib/help.jl")
 
 ########################################
 doc"
