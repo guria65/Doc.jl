@@ -1,56 +1,131 @@
-= Doc.jl
 
-== Design
 
-`DOC` is a global object of type `DocDict`. The keys are string representations
-of Julia functions, methods or other objects. The values are objects of type
-`DocEntry`, which contain the documentation and metadata. For example:
+= JDoc.jl
+Daniel Carrera
+v0.1 alpha
+
+Documentation system for Julia.
+
+
+== API
+
+Basic ussage:
 
 ----
-DOC[f][:date]
-DOC[f][:author]
-DOC[f][:docstring]
-DOC[f][:description]
+using JDoc
+
+str = readdoc("example.jl")
+
+doc = jdoc(str)
+
+println( reprmime("text/html", doc) )
 ----
 
-List available metadata with `keys(DOC[f])`. In practice, one should access
-`DOC` only through the provided API:
 
-* The `@doc` macro.
-* The `help` and `apropos` functions.
+== Online help
 
-Use `@doc` to add documentation to the online help:
+Use to `@doc` macro to add entries to the online help. You can use `@doc`
+to document methods, functions, constants, and other Julia objects.
 
-[source]
 ----
-foo(x) = 3x
-
-@doc "Documentation for `foo()`."  foo
-
-@doc "
-Description of how the function works.
-
-" function foo(x::Real)
-    7x/3
-end
+@doc "About method foo(x::Int) ..." function foo(x::Int) ... end
+@doc "About method foo(x::Real) ..." foo(x::Real) = ...
+@doc "About object foo ..." foo
 ----
 
-Use `help` and `apropos` to search the online help:
+=== backend
 
-[source]
+The documentation is stored in a global dictionary object called `DOC`.
+The `help()` function looks up values inside `DOC`. You should not modify
+`DOC` directly unless you know what you are doing. The keys are arbitrary
+Julia objects and the values are dictionaries. The main documentation
+should be in `DOC[obj][:doc]`.
+
+
+== Writing manuals
+
+
+=== readdoc
+
+Given an IO stream or file name, this function extracts all the docstrings,
+including those in `include`d files.
+
+
+=== JDoc markup
+
+JDoc is a human-readable markup language. It is a small subset of AsciiDoc,
+intended to provide enough features for source code documentation while
+keeping the implementation simple.
+
+JDoc can be naturally extended by using additional features from AsciiDoc
+and a standard AsciiDoc processor. The two main implementations are
+http://asciidoc.org[asciidoc] and http://asciidoctor.org[Asciidoctor].
+
+=== Status
+
+The current parser can read headings, most block types (tables are passed
+verbatim), and all paragraph types (NOTE, TIP, WARNING, etc.).
+
 ----
-help(foo)
+= Head 1
 
-help("foo")
+== Head 2
 
-help("foo(x::Real)")
+=== Head 3
 
-for m in methods(foo)
-	help(m)
-end
+==== Head 4
 
-apropos("foo")
+===== Head 5
 
-apropos("f*")
+This is a paragraph.
+
+TIP: This is a paragraph.
+
+NOTE: This is a paragraph.
+
+WARNING: This is a paragraph.
+
+CAUTION: This is a paragraph.
+
+IMPORTANT: This is a paragraph.
+
+  ....
+  Literal line 1
+  Literal line 2
+  ....
+  
+  ----
+  Listing line 1
+  Listing line 2
+  ----
+  
+  ====
+  Example line 1
+  Example line 2
+  ====
+  
+  ****
+  Sidebar line 1
+  Sidebar line 2
+  ****
+  
+  ____
+  Verse line 1
+  Verse line 2
+  ____
+  
+  |===
+  Table line 1
+  Table line 2
+  |===
+  
+  ++++
+  Pass line 1
+  Pass line 2
+  ++++
+  
+  ////
+  Comment line 1
+  Comment line 2
+  ////
 ----
-
