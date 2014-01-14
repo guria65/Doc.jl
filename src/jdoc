@@ -1,12 +1,16 @@
-"""
+#!/usr/bin/env julia
 
-=== jdoc
+using JDoc
+
+doc"
+
+== jdoc
 
 This is a command-line program that extract all the docstrings out of
 a Julia file (respecting `include` directives) to help produce manuals.
 The program is a work in progress, but here is the intended API:
 
-* `jdoc --raw` prints the unprocessed raw docstring. This allows users to
+* `jdoc --plain` prints the unprocessed raw docstring. This allows users to
 use an external program to process the docstring. Thus, users can use any
 markup, like LaTeX, ReST or raw HTML.
 
@@ -19,11 +23,36 @@ without requiring external programs.
 This is how I intend `jdoc` to work:
 
 ----
-jdoc example.jl         --  Pager, similar to man pages or perloc.
-jdoc --raw  example.jl  --  Output raw docstring.
-jdoc --html exampe.jl   --  Output HTML.
+jdoc example.jl          --  Pager, similar to man pages or perloc.
+jdoc --plain example.jl  --  Output raw docstring.
+jdoc --html  exampe.jl   --  Output HTML.
 ----
 
 I also want to think about how `jdoc` should support the `@doc` macro
 provided by the JDoc.jl module.
-"""
+"
+
+if length(ARGS) == 0 || ARGS[1] == "--help" || ARGS[1] == "-h" || length(ARGS) > 2
+	
+	str =	"""
+			This program extracts documentation strings from a Julia file,
+			and prints it in an appropriate format.
+			
+			Usage:  jdoc [options] example.jl
+			
+			Options:   --plain       Plain text output.
+			           --html        HTML output.
+			           --tree        Print a syntax tree.
+			"""
+	println(str)
+else
+	if length(ARGS) == 1
+		format = "text/plain"
+		file   = ARGS[1]
+	else
+		format = "text/" * replace(ARGS[1], "-", "")
+		file   = ARGS[2]
+	end
+	writemime(STDOUT, format, jdoc( readdoc(file) ))
+end
+
