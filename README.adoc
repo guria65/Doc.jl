@@ -4,7 +4,26 @@
 Daniel Carrera
 v0.1 alpha
 
-Documentation system for Julia.
+A modern documentation system for Julia.
+
+JDoc.jl is a documentation module for Julia. It provides features for
+both online help and for writing manual-style documentation. JDoc is
+currently alpha software. If you are feeling adventurous, you are
+ecouraged to give it a try.
+
+This page summarizes the current status of JDoc.jl, and a description of
+the JDoc markup format. You may complement this document with the wiki.
+This document is divided in three parts:
+
+
+API:: A lightining tour of the JDoc API, for those who want to write their
+own scripts using JDoc.
+
+Online help:: How JDoc will let you add your function's documentation to
+the `help()` command.
+
+Manuals:: How JDoc will make it easier for you to write and maintain a
+manual for your product.
 
 
 == API
@@ -14,11 +33,19 @@ Basic ussage:
 ----
 using JDoc
 
+doc"
+This is a docstring. Docstrings contain program documentation
+that can be extracted and parsed by the JDoc module.
+"
+
+# Extract docstrings from a file.
 str = readdoc("example.jl")
 
+# Parse the string as JDoc markup.
 doc = jdoc(str)
 
-println( reprmime("text/html", doc) )
+# Convert to HTML.
+writemime(STDOUT, "text/html", doc)
 ----
 
 
