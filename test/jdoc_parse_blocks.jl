@@ -4,7 +4,7 @@ Comment line 1
 Comment line 2
 ////
 """
-obj = parse_jdoc(docstr)
+obj = jdoc(docstr)
 
 @test obj.tag == :root
 @test obj.content == []
@@ -15,7 +15,7 @@ Table line 1
 Table line 2
 |===
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :table  
 @test obj.meta[:group] == :other   
@@ -28,7 +28,7 @@ Literal line 1
 Literal line 2
 ....
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :literal
 @test obj.meta[:group] == :verbatim
@@ -41,7 +41,7 @@ Listing line 1
 Listing line 2
 ----
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :listing
 @test obj.meta[:group] == :verbatim
@@ -54,7 +54,7 @@ Pass line 1
 Pass line 2
 ++++
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :pass   
 @test obj.meta[:group] == :other   
@@ -67,7 +67,7 @@ Example line 1
 Example line 2
 ====
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :example
 @test obj.meta[:group] == :normal  
@@ -81,7 +81,7 @@ Sidebar line 1
 Sidebar line 2
 ****
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :sidebar
 @test obj.meta[:group] == :normal  
@@ -95,7 +95,7 @@ Verse line 1
 Verse line 2
 ____
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :passage  
 @test obj.meta[:group] == :normal  

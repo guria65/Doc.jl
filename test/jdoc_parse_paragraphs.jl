@@ -6,7 +6,7 @@ This is part of paragraph 1.
 This is paragraph 2.
 This is part of paragraph 2.
 """
-obj = parse_jdoc(docstr)
+obj = jdoc(docstr)
 
 @test obj.content[2] == ""
 @test obj.content[1].tag == :para
@@ -20,7 +20,7 @@ docstr = """
 TIP: This is a tip.
 This is part of the tip.
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :para
 @test obj.meta[:style] == :tip
@@ -32,7 +32,7 @@ docstr = """
 NOTE: This is a note.
 This is part of the note.
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :para
 @test obj.meta[:style] == :note
@@ -44,7 +44,7 @@ docstr = """
 WARNING: This is a warning.
 This is part of the warning.
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :para
 @test obj.meta[:style] == :warning
@@ -56,7 +56,7 @@ docstr = """
 CAUTION: This is a caution.
 This is part of the caution.
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :para
 @test obj.meta[:style] == :caution
@@ -68,7 +68,7 @@ docstr = """
 IMPORTANT: This is important.
 This is part of the important message.
 """
-obj = parse_jdoc(docstr).content[1]
+obj = jdoc(docstr).content[1]
 
 @test obj.tag == :para
 @test obj.meta[:style] == :important
