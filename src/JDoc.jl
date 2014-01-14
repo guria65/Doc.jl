@@ -72,11 +72,15 @@ doc = jdoc(str)
 writemime(STDOUT, \"text/html\", doc)
 ----
 
+docstring:: A documentation string---_docstring_---is a string literal of
+the form `doc\" ... \"` or `doc\"\"\" ... \"\"\"`. They are used to mark
+source documentation that is not part of the online help.
+
 readdoc(source):: Given an IO stream or file name, this function extracts
 all the docstrings, respecting `include` directives.
 
 jdoc(docstr):: Takes a string and parses it as JDoc markup. The resulting
-object can be converted to various formats such as HTML.
+object can be converted to various formats such as HTML and LaTeX.
 "
 import Base: writemime
 
