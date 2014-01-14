@@ -72,7 +72,7 @@ doc = jdoc(str)
 writemime(STDOUT, \"text/html\", doc)
 ----
 
-docstring:: A documentation string---_docstring_---is a string literal of
+docstring:: A documentation string -- _docstring_ -- is a string literal of
 the form `doc\" ... \"` or `doc\"\"\" ... \"\"\"`. They are used to mark
 source documentation that is not part of the online help.
 
