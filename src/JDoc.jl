@@ -10,20 +10,21 @@ macro doc_str(str)   str  end
 macro doc_mstr(str)  str  end
 
 doc"
-= JDoc.jl
-Daniel Carrera
-v0.1 alpha
+== JDoc.jl
+
+----
+Author:  Daniel Carrera
+Version: v0.1 alpha
+----
 
 A modern documentation system for Julia.
 
 JDoc.jl is a documentation module for Julia. It provides features for
 both online help and for writing manual-style documentation. JDoc is
 currently alpha software. If you are feeling adventurous, you are
-ecouraged to give it a try.
-
-This page summarizes the current status of JDoc.jl, and a description of
-the JDoc markup format. You may complement this document with the wiki.
-This document is divided in three parts:
+ecouraged to give it a try. This page summarizes the current status of
+JDoc.jl, and a description of the JDoc markup format. You may complement
+this document with the wiki. This document is divided in three parts:
 
 
 API:: A lightining tour of the JDoc API, for those who want to write their
@@ -49,7 +50,7 @@ end
 
 ########################################
 doc"
-== API
+=== API
 
 Basic ussage:
 
@@ -70,6 +71,12 @@ doc = jdoc(str)
 # Convert to HTML.
 writemime(STDOUT, \"text/html\", doc)
 ----
+
+readdoc(source):: Given an IO stream or file name, this function extracts
+all the docstrings, respecting `include` directives.
+
+jdoc(docstr):: Takes a string and parses it as JDoc markup. The resulting
+object can be converted to various formats such as HTML.
 "
 import Base: writemime
 
@@ -83,7 +90,7 @@ include("lib/help.jl")
 
 ########################################
 doc"
-== Writing manuals
+=== Writing manuals
 "
 include("lib/readdoc.jl")
 include("lib/parser.jl")

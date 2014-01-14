@@ -1,9 +1,3 @@
-doc"
-=== readdoc
-
-Given an IO stream or file name, this function extracts all the docstrings,
-including those in `include`d files.
-"
 
 export readdoc
 

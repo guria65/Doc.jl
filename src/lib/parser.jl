@@ -1,5 +1,5 @@
 doc"
-=== JDoc markup
+==== JDoc markup
 
 JDoc is a human-readable markup language. It is a small subset of AsciiDoc,
 intended to provide enough features for source code documentation while
@@ -8,8 +8,6 @@ keeping the implementation simple.
 JDoc can be naturally extended by using additional features from AsciiDoc
 and a standard AsciiDoc processor. The two main implementations are
 http://asciidoc.org[asciidoc] and http://asciidoctor.org[Asciidoctor].
-
-=== Status
 
 The current parser can read headings, most block types (tables are passed
 verbatim), and all paragraph types (NOTE, TIP, WARNING, etc.).

@@ -1,19 +1,20 @@
 
 
-= JDoc.jl
-Daniel Carrera
-v0.1 alpha
+== JDoc.jl
+
+----
+Author:  Daniel Carrera
+Version: v0.1 alpha
+----
 
 A modern documentation system for Julia.
 
 JDoc.jl is a documentation module for Julia. It provides features for
 both online help and for writing manual-style documentation. JDoc is
 currently alpha software. If you are feeling adventurous, you are
-ecouraged to give it a try.
-
-This page summarizes the current status of JDoc.jl, and a description of
-the JDoc markup format. You may complement this document with the wiki.
-This document is divided in three parts:
+ecouraged to give it a try. This page summarizes the current status of
+JDoc.jl, and a description of the JDoc markup format. You may complement
+this document with the wiki. This document is divided in three parts:
 
 
 API:: A lightining tour of the JDoc API, for those who want to write their
@@ -26,7 +27,7 @@ Manuals:: How JDoc will make it easier for you to write and maintain a
 manual for your product.
 
 
-== API
+=== API
 
 Basic ussage:
 
@@ -48,8 +49,14 @@ doc = jdoc(str)
 writemime(STDOUT, "text/html", doc)
 ----
 
+readdoc(source):: Given an IO stream or file name, this function extracts
+all the docstrings, respecting `include` directives.
 
-== Online help
+jdoc(docstr):: Takes a string and parses it as JDoc markup. The resulting
+object can be converted to various formats such as HTML.
+
+
+=== Online help
 
 Use to `@doc` macro to add entries to the online help. You can use `@doc`
 to document methods, functions, constants, and other Julia objects.
@@ -60,7 +67,7 @@ to document methods, functions, constants, and other Julia objects.
 @doc "About object foo ..." foo
 ----
 
-=== backend
+==== backend
 
 The documentation is stored in a global dictionary object called `DOC`.
 The `help()` function looks up values inside `DOC`. You should not modify
@@ -69,16 +76,10 @@ Julia objects and the values are dictionaries. The main documentation
 should be in `DOC[obj][:doc]`.
 
 
-== Writing manuals
+=== Writing manuals
 
 
-=== readdoc
-
-Given an IO stream or file name, this function extracts all the docstrings,
-including those in `include`d files.
-
-
-=== JDoc markup
+==== JDoc markup
 
 JDoc is a human-readable markup language. It is a small subset of AsciiDoc,
 intended to provide enough features for source code documentation while
@@ -87,8 +88,6 @@ keeping the implementation simple.
 JDoc can be naturally extended by using additional features from AsciiDoc
 and a standard AsciiDoc processor. The two main implementations are
 http://asciidoc.org[asciidoc] and http://asciidoctor.org[Asciidoctor].
-
-=== Status
 
 The current parser can read headings, most block types (tables are passed
 verbatim), and all paragraph types (NOTE, TIP, WARNING, etc.).

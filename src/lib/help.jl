@@ -1,5 +1,5 @@
 doc"
-== Online help
+=== Online help
 
 Use to `@doc` macro to add entries to the online help. You can use `@doc`
 to document methods, functions, constants, and other Julia objects.
@@ -10,7 +10,7 @@ to document methods, functions, constants, and other Julia objects.
 @doc \"About object foo ...\" foo
 ----
 
-=== backend
+==== backend
 
 The documentation is stored in a global dictionary object called `DOC`.
 The `help()` function looks up values inside `DOC`. You should not modify
