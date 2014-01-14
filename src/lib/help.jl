@@ -26,7 +26,7 @@ typealias DocDict  Dict{Any,DocEntry}
 
 DOC = DocDict()
 
-help(key) = show(haskey(DOC,key) ? DOC[key][:doc] : "No help for `$key`")
+jhelp(key) = show(haskey(DOC,key) ? DOC[key][:doc] : "No help for `$key`")
 
 
 macro doc(s,e)
