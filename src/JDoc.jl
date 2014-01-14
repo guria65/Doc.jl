@@ -48,7 +48,7 @@ import Base: writemime
 
 writemime(io, ::MIME"text/plain", doc::DocNode) = write(io, doc.meta[:docstr])
 writemime(io, ::MIME"text/html" , doc::DocNode) = write(io, to_html(doc)  )
-writemime(io, ::MIME"text/dump" , doc::DocNode) = write(io, to_dump(doc)  )
+writemime(io, ::MIME"text/dump" , doc::DocNode) = write(io, to_dump(doc) * "\n" )
 
 ########################################
 
