@@ -1,10 +1,10 @@
 module JDoc
 
+export @doc_str, @doc_mstr, jdoc, DocNode
+
 # String macros -- Sole purpose is to denote docstrings.
 macro doc_str(str)   str  end
 macro doc_mstr(str)  str  end
-
-export @doc_str, @doc_mstr
 
 doc"
 = JDoc.jl
@@ -13,6 +13,17 @@ v0.1 alpha
 
 Documentation system for Julia.
 "
+
+type DocNode
+	tag::Symbol
+	content::Array{Union(DocNode,String)}
+	meta::Dict
+	
+	DocNode(tag)            = new(tag,Item[],Dict())
+	DocNode(tag,meta::Dict) = new(tag,Item[],meta)
+	DocNode(tag,str::String)      = new(tag,mysplit(str),Dict())
+	DocNode(tag,str::String,meta) = new(tag,mysplit(str),meta)
+end
 
 ########################################
 doc"

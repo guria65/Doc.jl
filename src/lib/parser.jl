@@ -79,19 +79,6 @@ IMPORTANT: This is a paragraph.
 ----
 "
 
-export jdoc, DocNode
-
-type DocNode
-	tag::Symbol
-	content::Array{Union(DocNode,String)}
-	meta::Dict
-	
-	DocNode(tag)            = new(tag,Item[],Dict())
-	DocNode(tag,meta::Dict) = new(tag,Item[],meta)
-	DocNode(tag,str::String)      = new(tag,mysplit(str),Dict())
-	DocNode(tag,str::String,meta) = new(tag,mysplit(str),meta)
-end
-
 typealias Item Union(DocNode,String)
 
 #
