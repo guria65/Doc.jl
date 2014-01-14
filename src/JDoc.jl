@@ -106,7 +106,7 @@ include("lib/help.jl")
 doc"
 === Writing manuals
 
-==== Command-lin program: `jdoc`
+==== Command-line program: `jdoc`
 
 This module includes a short script called `jdoc`, which uses the API described
 above to extract and process documentation in Julia files. The program can print
