@@ -3,15 +3,13 @@ doc"
 
 JDoc is a human-readable markup language. It is a small subset of AsciiDoc,
 intended to provide enough features for source code documentation while
-keeping the implementation simple.
+keeping the implementation simple. JDoc can be naturally extended by using
+additional features from AsciiDoc and a standard AsciiDoc processor. The
+two main implementations are http://asciidoc.org[asciidoc] and
+http://asciidoctor.org[Asciidoctor]. The current parser supports the
+following features:
 
-JDoc can be naturally extended by using additional features from AsciiDoc
-and a standard AsciiDoc processor. The two main implementations are
-http://asciidoc.org[asciidoc] and http://asciidoctor.org[Asciidoctor].
-
-The current parser can read headings, most block types (tables are passed
-verbatim), and all paragraph types (NOTE, TIP, WARNING, etc.).
-
+Headings::
 ----
 = Head 1
 
@@ -22,7 +20,12 @@ verbatim), and all paragraph types (NOTE, TIP, WARNING, etc.).
 ==== Head 4
 
 ===== Head 5
+----
 
+
+Paragraphs::Including admonition paragraphs (TIP, NOTE, WARNING, CAUTION
+IMPORTANT.):
+----
 This is a paragraph.
 
 TIP: This is a paragraph.
@@ -34,7 +37,10 @@ WARNING: This is a paragraph.
 CAUTION: This is a paragraph.
 
 IMPORTANT: This is a paragraph.
+----
 
+Blocks::Most block types supported. Tables are passed verbatim.
+----
   ....
   Literal line 1
   Literal line 2
