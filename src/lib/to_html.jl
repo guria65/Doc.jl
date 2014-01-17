@@ -15,6 +15,23 @@ preamble_to_html(obj) = to_html(obj.content)
 
 pass_to_html(obj) = join(obj.content, "\n")
 
+#
+# Lists
+#
+function listitem_to_html(obj)
+	if haskey(obj.meta, :term)
+		"""
+		<dt>$( obj.meta[:term] )</dt>
+		<dd>$( to_html(obj.content) )</dd>
+		"""
+	else
+		"<li>$( to_html(obj.content) )</li>"
+	end
+end
+definition_to_html(obj) = "<dl>\n" * to_html(obj.content) * "</dl>\n"
+ordered_to_html(obj)    = "<ol>\n" * to_html(obj.content) * "</ol>\n"
+bullet_to_html(obj)     = "<ul>\n" * to_html(obj.content) * "</ul>\n"
+	
 
 #
 # Sections

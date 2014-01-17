@@ -143,6 +143,10 @@ function parse_lists!(obj::DocNode)
 			# RULE: Find the *LAST* spot with :: followed by a space.
 			# 
 			term, def = match(r"^\s*(\S.*)::\s(.*)", str).captures
+			
+			def  = convert(UTF8String, def)
+			term = convert(UTF8String, rstrip(term))
+			
 			append!(list, DocNode(:listitem, def, {:term => rstrip(term)}))
 			
 		elseif list.tag == :ordered
@@ -150,11 +154,11 @@ function parse_lists!(obj::DocNode)
 			# Numbered lists can have numbers.
 			#
 			regex = ismatch(r"^\s*\d+\.", str) ? r"^\s*\d+\.(.*)" : r"^\s*\.(.*)"
-			str = lstrip( match(regex, str).captures[1] )
+			str   = convert(UTF8String, lstrip(match(regex, str).captures[1]))
 			append!(list, DocNode(:listitem, str))
 		else
 			# Remove bullet.
-			str = lstrip(lstrip(str)[2:end])
+			str = convert(UTF8String, lstrip(lstrip(str)[2:end]))
 			append!(list, DocNode(:listitem, str))
 		end
 	end
