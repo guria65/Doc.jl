@@ -105,9 +105,116 @@ function jdoc(docstr::String)
 	
 	parse_blocks!(root)
 	parse_sections!(root)
+	parse_lists!(root)
 	parse_paragraphs!(root)
 	
 	return root
+end
+
+
+# - - - - - - - - - - - + - - - - - - - - - - - #
+#                   L I S T S                   #
+# - - - - - - - - - - - + - - - - - - - - - - - #
+function parse_lists!(obj::DocNode)
+	# New content.
+	content = Item[]
+	
+	style(obj::DocNode) = islist(obj) ? obj.tag : :none
+	function style(str::String)
+		ismatch(r"^\s*$"    , str) && return :blank
+		ismatch(r"^[*-]\s"  , str) && return :bullet
+		ismatch(r"^[\d.]+\s", str) && return :ordered
+		ismatch(r"^\S.*::\s", str) && return :definition
+		ismatch(r"^\s+\S"   , str) && return :indented
+		ismatch(r"^\S"      , str) && return :para
+		
+		# This should never be reached.
+		error("Could not recognize pattern for '$str'")
+	end
+	islist(obj::DocNode) = in(obj.tag   , [:ordered,:bullet,:definition])
+	islist(str::String)  = in(style(str), [:ordered,:bullet,:definition])
+	ispara(str::String)  = style(str) == :para
+	
+	#
+	# "list" is a list object, containing many list items.
+	#
+	function create_new_listitem!(list::DocNode,str::String)
+		if list.tag == :definition
+			#
+			# RULE: Find the *LAST* spot with :: followed by a space.
+			# 
+			term, def = match(r"^(\S.*)::\s(.*)", str).captures
+			append!(list, DocNode(:listitem, def, {:term => rstrip(term)}))
+			
+		elseif list.tag == :ordered
+			#
+			# Numbered lists can have numbers.
+			#
+			regex = ismatch(r"^\d+\.", str) ? r"^\d+\.(.*)" : r"^\.(.*)"
+			str = lstrip( match(regex, str).captures[1] )
+			append!(list, DocNode(:listitem, str))
+		else
+			# Remove bullet.
+			str = lstrip(str[2:end])
+			append!(list, DocNode(:listitem, str))
+		end
+	end
+	append_to_listitem!(list::DocNode,obj) = append!(list.content[end],obj)
+	
+	#
+	# Start with a blank list item.
+	#
+	prev = ""
+	for item in obj.content
+		
+		if isa(item,DocNode)
+			push!(content, item) # Block    => Any list must terminate.
+		elseif style(item) == :para && prev == ""
+			push!(content, item) # New para => Any list must terminate.
+		elseif length(content) > 0 && islist(content[end])
+			
+			if in(style(item), [:indented,:blank,:para])
+				#
+				# IF :para
+				#		=> prev must be ""
+				#		=> still inside the list item.
+				# 
+				append_to_listitem!(content[end], item)
+			elseif style(content[end]) == :definition
+				# 
+				# Exlicit rule:
+				# 
+				# 		:ordered, :bullet, :definition can only be
+				#		nested into a :definition via indentation.
+				# 
+				if style(item) == :definition
+					create_new_listitem!(content[end], item)
+				else
+					# Start new list.
+					push!(content, DocNode(style(item)))
+					create_new_listitem!(content[end], item)
+				end
+			else
+				#
+				# This is a :bullet or :ordered list.
+				#
+				if style(item) != style(content[end])
+					append_to_listitem!(content[end], item)
+				else
+					create_new_listitem!(content[end], item)
+				end
+			end
+		elseif islist(item)
+			# Start new list.
+			push!(content, DocNode(style(item)))
+			create_new_listitem!(content[end], item)
+		else
+			push!(content, item) # Nothing to do.
+		end
+		prev = item
+	end
+	
+	obj.content = content
 end
 
 
