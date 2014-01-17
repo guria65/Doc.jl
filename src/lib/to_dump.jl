@@ -17,8 +17,8 @@ function to_dump(obj::DocNode,indent=0)
 	sp = " "^indent
 	
 	str  =      "($(obj.tag) \n"
-	str *= sp * "  (meta " * to_dump(obj.meta) * ")\n"
-	str *= sp * "  (content \n" * to_dump(obj.content, indent+4) * "))"
+	str *= length(obj.meta) == 0  ? "" : sp * "  (meta " * to_dump(obj.meta) * ")\n"
+	str *= to_dump(obj.content, indent+2) * ")"
 	
 	return str
 end
