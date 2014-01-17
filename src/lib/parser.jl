@@ -122,11 +122,10 @@ function parse_lists!(obj::DocNode)
 	style(obj::DocNode) = islist(obj) ? obj.tag : :none
 	function style(str::String)
 		ismatch(r"^\s*$"    , str) && return :blank
-		ismatch(r"^[*-]\s"  , str) && return :bullet
-		ismatch(r"^[\d.]+\s", str) && return :ordered
-		ismatch(r"^\S.*::\s", str) && return :definition
-		ismatch(r"^\s+\S"   , str) && return :indented
-		ismatch(r"^\S"      , str) && return :para
+		ismatch(r"^\s*[*-]\s"  , str) && return :bullet
+		ismatch(r"^\s*[\d.]+\s", str) && return :ordered
+		ismatch(r"^\s*\S.*::\s", str) && return :definition
+		ismatch(r"^\s*\S"      , str) && return :para
 		
 		# This should never be reached.
 		error("Could not recognize pattern for '$str'")
@@ -143,19 +142,19 @@ function parse_lists!(obj::DocNode)
 			#
 			# RULE: Find the *LAST* spot with :: followed by a space.
 			# 
-			term, def = match(r"^(\S.*)::\s(.*)", str).captures
+			term, def = match(r"^\s*(\S.*)::\s(.*)", str).captures
 			append!(list, DocNode(:listitem, def, {:term => rstrip(term)}))
 			
 		elseif list.tag == :ordered
 			#
 			# Numbered lists can have numbers.
 			#
-			regex = ismatch(r"^\d+\.", str) ? r"^\d+\.(.*)" : r"^\.(.*)"
+			regex = ismatch(r"^\s*\d+\.", str) ? r"^\s*\d+\.(.*)" : r"^\s*\.(.*)"
 			str = lstrip( match(regex, str).captures[1] )
 			append!(list, DocNode(:listitem, str))
 		else
 			# Remove bullet.
-			str = lstrip(str[2:end])
+			str = lstrip(lstrip(str)[2:end])
 			append!(list, DocNode(:listitem, str))
 		end
 	end
@@ -173,30 +172,17 @@ function parse_lists!(obj::DocNode)
 			push!(content, item) # New para => Any list must terminate.
 		elseif length(content) > 0 && islist(content[end])
 			
-			if in(style(item), [:indented,:blank,:para])
+			if in(style(item), [:blank,:para])
 				#
 				# IF :para
 				#		=> prev must be ""
 				#		=> still inside the list item.
 				# 
 				append_to_listitem!(content[end], item)
-			elseif style(content[end]) == :definition
-				# 
-				# Exlicit rule:
-				# 
-				# 		:ordered, :bullet, :definition can only be
-				#		nested into a :definition via indentation.
-				# 
-				if style(item) == :definition
-					create_new_listitem!(content[end], item)
-				else
-					# Start new list.
-					push!(content, DocNode(style(item)))
-					create_new_listitem!(content[end], item)
-				end
 			else
 				#
-				# This is a :bullet or :ordered list.
+				# RULE: Indentation is irrelevant
+				#       => Definitions cannot nest directly.
 				#
 				if style(item) != style(content[end])
 					append_to_listitem!(content[end], item)

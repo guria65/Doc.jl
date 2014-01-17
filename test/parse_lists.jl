@@ -178,3 +178,102 @@ list = jdoc(docstr).content[1]
 @test list.content[1].content[1].content[1] == "Water"
 
 
+#
+#  INDENTATION -- Should be flattened.
+#
+#---------------------------------------
+
+docstr = """
+* Hello
+    * World
+    * Platypus
+* Kangaroo
+Canada
+* Koala
+"""
+list = jdoc(docstr).content[1]
+
+@test list.tag == :bullet
+@test length(list.content) == 5
+@test list.content[1].tag == :listitem
+@test list.content[2].tag == :listitem
+@test list.content[3].tag == :listitem
+@test list.content[4].tag == :listitem
+@test list.content[5].tag == :listitem
+@test list.content[1].content[1].tag == :para
+@test list.content[2].content[1].tag == :para
+@test list.content[3].content[1].tag == :para
+@test list.content[4].content[1].tag == :para
+@test list.content[5].content[1].tag == :para
+@test list.content[1].content[1].content[1] == "Hello"
+@test list.content[2].content[1].content[1] == "World"
+@test list.content[3].content[1].content[1] == "Platypus"
+@test list.content[4].content[1].content[1] == "Kangaroo"
+@test list.content[4].content[1].content[2] == "Canada"
+@test list.content[5].content[1].content[1] == "Koala"
+
+docstr = """
+1. Hello
+    1. World
+    2. Platypus
+2. Kangaroo
+Canada
+3. Koala
+"""
+list = jdoc(docstr).content[1]
+
+@test list.tag == :ordered
+@test length(list.content) == 5
+@test list.content[1].tag == :listitem
+@test list.content[2].tag == :listitem
+@test list.content[3].tag == :listitem
+@test list.content[4].tag == :listitem
+@test list.content[5].tag == :listitem
+@test list.content[1].content[1].tag == :para
+@test list.content[2].content[1].tag == :para
+@test list.content[3].content[1].tag == :para
+@test list.content[4].content[1].tag == :para
+@test list.content[5].content[1].tag == :para
+@test list.content[1].content[1].content[1] == "Hello"
+@test list.content[2].content[1].content[1] == "World"
+@test list.content[3].content[1].content[1] == "Platypus"
+@test list.content[4].content[1].content[1] == "Kangaroo"
+@test list.content[4].content[1].content[2] == "Canada"
+@test list.content[5].content[1].content[1] == "Koala"
+
+docstr = """
+Name:: Joe
+    Title:: CEO
+        Salary:: $1
+Country:: Canada
+North America
+Sex:: Male
+"""
+list = jdoc(docstr).content[1]
+
+@test list.tag == :definition
+@test length(list.content) == 5
+@test list.content[1].tag == :listitem
+@test list.content[2].tag == :listitem
+@test list.content[3].tag == :listitem
+@test list.content[4].tag == :listitem
+@test list.content[5].tag == :listitem
+@test list.content[1].meta[:term] == "Name"
+@test list.content[2].meta[:term] == "Title"
+@test list.content[3].meta[:term] == "Salary"
+@test list.content[4].meta[:term] == "Country"
+@test list.content[5].meta[:term] == "Sex"
+@test list.content[1].content[1].tag == :para
+@test list.content[2].content[1].tag == :para
+@test list.content[3].content[1].tag == :para
+@test list.content[4].content[1].tag == :para
+@test list.content[5].content[1].tag == :para
+@test list.content[1].content[1].content[1] == "Joe"
+@test list.content[2].content[1].content[1] == "CEO"
+@test list.content[3].content[1].content[1] == "$1"
+@test list.content[4].content[1].content[1] == "Canada"
+@test list.content[4].content[1].content[2] == "North America"
+@test list.content[5].content[1].content[1] == "Male"
+
+
+
