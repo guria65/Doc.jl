@@ -369,7 +369,12 @@ function parse_sections!(obj::DocNode, level::Integer=0)
 	# Parse lower-level headings.
 	if level < 4
 		for item in content
-			if is(item, :section) parse_sections!(item, level+1) end
+			#
+			# Allows you to start a document with == headings, but not lower.
+			#
+			if is(item, :section) || level == 0
+				parse_sections!(item, level+1)
+			end
 		end
 	end
 	
