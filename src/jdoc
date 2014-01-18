@@ -23,6 +23,7 @@ without requiring external programs.
 jdoc example.jl          --  Output the unprocessed docstring.
 jdoc --plain example.jl  --  Output the unprocessed docstring.
 jdoc --html  exampe.jl   --  Output HTML.
+jdoc --xml  exampe.jl    --  Output XML (Docbook).
 ----
 
 I also want to think about how `jdoc` should support the `@doc` macro
@@ -39,6 +40,7 @@ if length(ARGS) == 0 || ARGS[1] == "--help" || ARGS[1] == "-h" || length(ARGS) >
 			
 			Options:   --plain       Plain text output.
 			           --html        HTML output.
+			           --xml         XML output (Docbook).
 			           --dump        Print a dump tree.
 			"""
 	println(str)
