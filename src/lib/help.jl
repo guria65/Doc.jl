@@ -13,21 +13,79 @@ to document methods, functions, constants, and other Julia objects.
 ==== backend
 
 The documentation is stored in a global dictionary object called `DOC`.
-The `help()` function looks up values inside `DOC`. You should not modify
+The `man()` function looks up values inside `DOC`. You should not modify
 `DOC` directly unless you know what you are doing. The keys are arbitrary
 Julia objects and the values are dictionaries. The main documentation
 should be in `DOC[obj][:doc]`.
 "
-
-import Base: help
 
 typealias DocEntry Dict{Any,Any}
 typealias DocDict  Dict{Any,DocEntry}
 
 DOC = DocDict()
 
-jhelp(key) = show(haskey(DOC,key) ? DOC[key][:doc] : "No help for `$key`")
+import Base: fullname
 
+#
+# There is no fullname(Function) because a function's methods can be defined
+# in different modules. All we can do is `fullname` all the methods.
+#
+function fullname(m::Method)
+	md_name  = string(m.func.code.module)
+	fn_name  = string(m.func.code.name)
+	fn_param = match(r"^(\(.*\))", string(m) ).captures[1]
+	
+	return md_name * "." * fn_name * fn_param
+end
+
+#
+# Temporary name, to avoid lashes with `help()`.
+#
+function man(key::Method;quiet=false)
+	
+	println("\n  " * fullname(key))
+	
+	if haskey(DOC,key)
+		# Add indentation.
+		doc = chomp(DOC[key][:doc])
+		doc = "    : " * replace(doc, "\n", "\n    : ")
+		print(doc)
+	elseif !quiet
+		println("No help available.")
+	end
+end
+function man(key::Function)
+	
+	println("Help for \"$(key)\":")
+	
+	if haskey(DOC,key)
+		# Add indentation.
+		doc = chomp(DOC[key][:doc])
+		doc = "    " * replace(doc, "\n", "\n    ")
+		
+		print(doc)
+	end
+	#
+	# Even if no method is documented, this will at least give a list of methods.
+	#
+	for m in methods(key)
+		man(m;quiet=true)
+	end
+end
+function man(key::Module)
+	#
+	# TODO:
+	#
+	#  1.  Modify @doc_str and @doc_mstr so they insert the documentation
+	#      in DOC[current_module()][:doc].
+	# 
+	#  2.  Modify @doc so it stores a list of methods that are documented
+	#      in DOC[current_module()][:methods]
+	#
+	#  3.  Inside this function, print the module documentation followed by
+	#      a list of functions that have methods documented.
+end
+	
 
 macro doc(s,e)
 	
@@ -56,7 +114,7 @@ macro doc(s,e)
 		func = eval(e)  # Function.
 		ml = methods(func, sig)
 		ml = filter(m -> m.sig == sig, ml)
-				
+		
 		#
 		# The last man standing should be the correct method.
 		#
@@ -67,23 +125,11 @@ macro doc(s,e)
 		key = eval(e)
 	end
 	
-	docstr   = typeof(s) == Expr ? eval(s) : s
-	DOC[key] = newdoc(docstr)
+	DOC[key] = DocEntry()
+	DOC[key][:doc] = typeof(s) == Expr ? eval(s) : s
 	
 	#
 	# Finally, run the function declaration.
 	#
 	:($(esc(e)))
 end
-
-
-#
-# TODO: Parse the docstring and extract any metadata.
-#
-function newdoc(str)
-	entry = DocEntry()
-	entry[:doc] = str
-	
-	return entry
-end
-

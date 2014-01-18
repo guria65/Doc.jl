@@ -1,6 +1,4 @@
 
-export readdoc
-
 # 
 # Extract docstrings given a file name.
 # 
@@ -9,7 +7,11 @@ readdoc(filename::String) = readdoc(open(filename))
 # 
 # Extract docstrings given an IOStream.
 # 
-function readdoc(io::IOStream)
+@doc "
+Given an IO stream or file name, this function extracts
+all the docstrings, respecting `include` directives.
+
+" function readdoc(io::IOStream)
 	#
 	# The "\n1" is an ugly hack to ensure that the file ends in a statement.
 	#

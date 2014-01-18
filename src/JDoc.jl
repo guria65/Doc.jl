@@ -2,7 +2,7 @@ module JDoc
 
 export DOC, DocEntry, DocDict
 export @doc, @doc_str, @doc_mstr
-export jdoc, DocNode
+export jdoc, DocNode, readdoc, man
 
 
 # String macros -- Sole purpose is to denote docstrings.
