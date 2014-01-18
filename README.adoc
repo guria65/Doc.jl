@@ -101,7 +101,9 @@ the original raw string, or convert it to supported formats.
 ----
 jdoc example.jl          # Output raw docstring.
 jdoc --plain example.jl  # Output raw docstring.
+jdoc --dump  exampe.jl   # Output a dump tree.
 jdoc --html  exampe.jl   # Output HTML.
+jdoc --xml   exampe.jl   # Output XML (Docbook).
 ----
 
 If the program receives two arguments, the first argument is interpreted as
