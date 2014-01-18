@@ -10,14 +10,17 @@ readdoc(filename::String) = readdoc(open(filename))
 # Extract docstrings given an IOStream.
 # 
 function readdoc(io::IOStream)
-	str = join(readlines(io) ,"")  # File contents.
+	#
+	# The "\n1" is an ugly hack to ensure that the file ends in a statement.
+	#
+	str = join(readlines(io) ,"") * "\n1" # File contents.
 	doc = "" # Docstring.
 	pos = 0  # Position.
 	
 	const N = length(str)
 	
 	while pos < N
-		(expr, pos) = parse(str, pos)
+		expr, pos = parse(str, pos)
 		
 		doc *= expr2doc(expr)
 	end
@@ -32,6 +35,7 @@ isdoc(expr::Expr) = (expr.head == :macrocall) &&
 isinclude(expr::Expr) = (expr.head == :call) &&
                         (expr.args[1] == :include)
 
+expr2doc(other) = ""
 function expr2doc(expr::Expr)
 	if isdoc(expr)
 		doc = "\n" * eval(expr)
