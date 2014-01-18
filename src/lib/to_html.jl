@@ -82,12 +82,17 @@ function root_to_html(obj)
 			head *= "  <meta name='Revision' content='$revision'/>\n"
 		end
 	end
-	head = "<head>\n" * head * "</head>\n"
 	
 	return	"""
 			<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
 			\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+			<head>
+			<!-- Load MathJax securely via HTTPS -->
+			<script type='text/javascript'
+			  src='https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'>
+			</script>
 			$head
+			</head>
 			<html xmlns=\"http://www.w3.org/1999/xhtml\">
 			$( to_html(obj.content) )
 			</html>
