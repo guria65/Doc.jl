@@ -276,4 +276,61 @@ list = jdoc(docstr).content[1]
 @test list.content[5].content[1].content[1] == "Male"
 
 
+#
+#  NESTING WITHIN SECTIONS
+#
+#---------------------------------------
+
+docstr = """
+== This is a heading
+
+Paragraph
+
+* Test 1.
+
+Paragraph
+
+- Test 2.
+
+Paragraph
+
+. Test 3.
+
+Paragraph
+
+1. Test 4.
+
+Paragraph
+
+Test Term:: Test 5.
+"""
+obj = jdoc(docstr)
+
+@test obj.content[1].tag == :section
+
+@test obj.content[1].content[4].tag == :itemized
+@test obj.content[1].content[4].content[1].tag == :listitem
+@test obj.content[1].content[4].content[1].content[1].tag == :para
+@test obj.content[1].content[4].content[1].content[1].content[1] == "Test 1."
+
+@test obj.content[1].content[7].tag == :itemized
+@test obj.content[1].content[7].content[1].tag == :listitem
+@test obj.content[1].content[7].content[1].content[1].tag == :para
+@test obj.content[1].content[7].content[1].content[1].content[1] == "Test 2."
+
+@test obj.content[1].content[10].tag == :ordered
+@test obj.content[1].content[10].content[1].tag == :listitem
+@test obj.content[1].content[10].content[1].content[1].tag == :para
+@test obj.content[1].content[10].content[1].content[1].content[1] == "Test 3."
+
+@test obj.content[1].content[13].tag == :ordered
+@test obj.content[1].content[13].content[1].tag == :listitem
+@test obj.content[1].content[13].content[1].content[1].tag == :para
+@test obj.content[1].content[13].content[1].content[1].content[1] == "Test 4."
+
+@test obj.content[1].content[16].tag == :variable
+@test obj.content[1].content[16].content[1].tag == :listitem
+@test obj.content[1].content[16].content[1].meta[:term] == "Test Term"
+@test obj.content[1].content[16].content[1].content[1].tag == :para
+@test obj.content[1].content[16].content[1].content[1].content[1] == "Test 5."
 

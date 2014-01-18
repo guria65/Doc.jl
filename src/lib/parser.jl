@@ -23,7 +23,7 @@ Headings::
 ----
 
 
-Paragraphs::Including admonition paragraphs (TIP, NOTE, WARNING, CAUTION
+Paragraphs:: Including admonition paragraphs (TIP, NOTE, WARNING, CAUTION
 IMPORTANT.):
 ----
 This is a paragraph.
@@ -39,7 +39,7 @@ CAUTION: This is a paragraph.
 IMPORTANT: This is a paragraph.
 ----
 
-Blocks::Most block types supported. Tables are passed verbatim.
+Blocks:: Most block types supported. Tables are passed verbatim.
 ----
   ....
   Literal line 1
@@ -95,6 +95,14 @@ myjoin(lines) = join(lines, "\n")      # Undo mysplit().
 
 isblank(node::DocNode) = all(node.content .== "")
 append!(node::DocNode,item::Item) = push!(node.content, item)
+
+#
+# Which objects should be processed.
+#
+process(obj::DocNode) = !in(obj.tag, [:literal, :listing, :pass, :table])
+process(other) = false
+	
+
 
 #
 # This function parses a JuliaDoc string and returns an object.
@@ -174,7 +182,9 @@ function parse_lists!(obj::DocNode)
 	for item in obj.content
 		
 		if isa(item,DocNode)
-			push!(content, item) # Block    => Any list must terminate.
+			# Block or new section => Any list must terminate.
+			process(item) && parse_lists!(item)
+			push!(content, item)
 		elseif style(item) == :paragraph && prev == ""
 			push!(content, item) # New para => Any list must terminate.
 		elseif length(content) > 0 && islist(content[end])
@@ -239,13 +249,10 @@ function parse_paragraphs!(obj::DocNode)
 		l == "" ? str : lstrip(replace(str,l,"",1))
 	end
 	
-	recurse(obj::DocNode) = !in(obj.tag, [:literal, :listing, :pass, :table])
-	recurse(other) = false
-	
 	inpara = false
 	for item in obj.content
 		if para(item) == :none
-			recurse(item) && parse_paragraphs!(item)
+			process(item) && parse_paragraphs!(item)
 			push!(content,item)
 			inpara = false
 		else

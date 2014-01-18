@@ -1,3 +1,7 @@
+#
+#  BASIC FEATURES
+#
+#---------------------------------------
 
 docstr = """
 This is paragraph 1.
@@ -68,3 +72,47 @@ obj = jdoc(docstr).content[1]
 @test obj.tag == :important
 @test obj.content[1] == "This is important."
 @test obj.content[2] == "This is part of the important message."
+
+
+#
+#  NESTING WITHIN SECTIONS
+#
+#---------------------------------------
+
+docstr = """
+== This is a heading
+
+This is a paragraph.
+
+TIP: This is a tip.
+
+NOTE: This is a note.
+
+WARNING: This is a warning.
+
+CAUTION: This is a caution.
+
+IMPORTANT: This is important.
+"""
+obj = jdoc(docstr)
+
+@test obj.content[1].tag == :section
+@test obj.content[1].content[1] == ""
+@test obj.content[1].content[2].tag == :para
+@test obj.content[1].content[2].content[1] == "This is a paragraph."
+@test obj.content[1].content[3] == ""
+@test obj.content[1].content[4].tag == :tip
+@test obj.content[1].content[4].content[1] == "This is a tip."
+@test obj.content[1].content[5] == ""
+@test obj.content[1].content[6].tag == :note
+@test obj.content[1].content[6].content[1] == "This is a note."
+@test obj.content[1].content[7] == ""
+@test obj.content[1].content[8].tag == :warning
+@test obj.content[1].content[8].content[1] == "This is a warning."
+@test obj.content[1].content[9] == ""
+@test obj.content[1].content[10].tag == :caution
+@test obj.content[1].content[10].content[1] == "This is a caution."
+@test obj.content[1].content[11] == ""
+@test obj.content[1].content[12].tag == :important
+@test obj.content[1].content[12].content[1] == "This is important."
+

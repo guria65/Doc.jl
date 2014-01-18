@@ -133,7 +133,7 @@ Headings::
 ----
 
 
-Paragraphs::Including admonition paragraphs (TIP, NOTE, WARNING, CAUTION
+Paragraphs:: Including admonition paragraphs (TIP, NOTE, WARNING, CAUTION
 IMPORTANT.):
 ----
 This is a paragraph.
@@ -149,7 +149,7 @@ CAUTION: This is a paragraph.
 IMPORTANT: This is a paragraph.
 ----
 
-Blocks::Most block types supported. Tables are passed verbatim.
+Blocks:: Most block types supported. Tables are passed verbatim.
 ----
   ....
   Literal line 1
@@ -191,3 +191,4 @@ Blocks::Most block types supported. Tables are passed verbatim.
   Comment line 2
   ////
 ----
+
