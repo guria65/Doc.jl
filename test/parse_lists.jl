@@ -4,7 +4,7 @@
 #---------------------------------------
 
 #
-# Basic bullet lists.
+# Basic itemized lists.
 #
 docstr = """
 * Item 1
@@ -12,7 +12,7 @@ docstr = """
 """
 list = jdoc(docstr).content[1]
 
-@test list.tag == :bullet
+@test list.tag == :itemized
 @test list.content[1].tag == :listitem
 @test list.content[2].tag == :listitem
 @test list.content[1].content[1].tag == :para
@@ -26,7 +26,7 @@ docstr = """
 """
 list = jdoc(docstr).content[1]
 
-@test list.tag == :bullet
+@test list.tag == :itemized
 @test list.content[1].tag == :listitem
 @test list.content[2].tag == :listitem
 @test list.content[1].content[1].tag == :para
@@ -82,23 +82,23 @@ list = jdoc(docstr).content[1]
 
 
 #
-# Basic definition lists.
+# Basic variable lists.
 #
 docstr = """
-Term 1:: Definition 1
-Term 2:: Definition 2
+Term 1:: Value 1
+Term 2:: Value 2
 """
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[2].tag == :listitem
 @test list.content[1].meta[:term] == "Term 1"
 @test list.content[2].meta[:term] == "Term 2"
 @test list.content[1].content[1].tag == :para
 @test list.content[2].content[1].tag == :para
-@test list.content[1].content[1].content[1] == "Definition 1"
-@test list.content[2].content[1].content[1] == "Definition 2"
+@test list.content[1].content[1].content[1] == "Value 1"
+@test list.content[2].content[1].content[1] == "Value 2"
 
 
 docstr = "Hello::World"
@@ -111,7 +111,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello:: World"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello"
 @test list.content[1].content[1].tag == :para
@@ -121,7 +121,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello :: World"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello"
 @test list.content[1].content[1].tag == :para
@@ -131,7 +131,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello(x::Int, y:: Real)::World"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello(x::Int, y"
 @test list.content[1].content[1].tag == :para
@@ -141,7 +141,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello(x::Int, y::Real):: World::Water"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello(x::Int, y::Real)"
 @test list.content[1].content[1].tag == :para
@@ -151,7 +151,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello(x::Int, y::Real):: World:: Water"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello(x::Int, y::Real):: World"
 @test list.content[1].content[1].tag == :para
@@ -161,7 +161,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello(x:: Int, y::Real):: World::Water"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello(x:: Int, y::Real)"
 @test list.content[1].content[1].tag == :para
@@ -171,7 +171,7 @@ list = jdoc(docstr).content[1]
 docstr = "Hello(x:: Int, y::Real):: World:: Water"
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test list.content[1].tag == :listitem
 @test list.content[1].meta[:term] == "Hello(x:: Int, y::Real):: World"
 @test list.content[1].content[1].tag == :para
@@ -193,7 +193,7 @@ Canada
 """
 list = jdoc(docstr).content[1]
 
-@test list.tag == :bullet
+@test list.tag == :itemized
 @test length(list.content) == 5
 @test list.content[1].tag == :listitem
 @test list.content[2].tag == :listitem
@@ -251,7 +251,7 @@ Sex:: Male
 """
 list = jdoc(docstr).content[1]
 
-@test list.tag == :definition
+@test list.tag == :variable
 @test length(list.content) == 5
 @test list.content[1].tag == :listitem
 @test list.content[2].tag == :listitem

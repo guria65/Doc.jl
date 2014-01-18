@@ -122,23 +122,23 @@ function parse_lists!(obj::DocNode)
 	style(obj::DocNode) = islist(obj) ? obj.tag : :none
 	function style(str::String)
 		ismatch(r"^\s*$"    , str) && return :blank
-		ismatch(r"^\s*[*-]\s"  , str) && return :bullet
 		ismatch(r"^\s*[\d.]+\s", str) && return :ordered
-		ismatch(r"^\s*\S.*::\s", str) && return :definition
+		ismatch(r"^\s*[*-]\s"  , str) && return :itemized
+		ismatch(r"^\s*\S.*::\s", str) && return :variable
 		ismatch(r"^\s*\S"      , str) && return :para
 		
 		# This should never be reached.
 		error("Could not recognize pattern for '$str'")
 	end
-	islist(obj::DocNode) = in(obj.tag   , [:ordered,:bullet,:definition])
-	islist(str::String)  = in(style(str), [:ordered,:bullet,:definition])
+	islist(obj::DocNode) = in(obj.tag   , [:ordered,:itemized,:variable])
+	islist(str::String)  = in(style(str), [:ordered,:itemized,:variable])
 	ispara(str::String)  = style(str) == :para
 	
 	#
 	# "list" is a list object, containing many list items.
 	#
 	function create_new_listitem!(list::DocNode,str::String)
-		if list.tag == :definition
+		if list.tag == :variable
 			#
 			# RULE: Find the *LAST* spot with :: followed by a space.
 			# 
@@ -157,7 +157,7 @@ function parse_lists!(obj::DocNode)
 			str   = convert(UTF8String, lstrip(match(regex, str).captures[1]))
 			append!(list, DocNode(:listitem, str))
 		else
-			# Remove bullet.
+			# Remove itemized.
 			str = convert(UTF8String, lstrip(lstrip(str)[2:end]))
 			append!(list, DocNode(:listitem, str))
 		end
@@ -186,7 +186,7 @@ function parse_lists!(obj::DocNode)
 			else
 				#
 				# RULE: Indentation is irrelevant
-				#       => Definitions cannot nest directly.
+				#       => variable lists cannot nest directly.
 				#
 				if style(item) != style(content[end])
 					append_to_listitem!(content[end], item)

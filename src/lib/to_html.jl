@@ -28,9 +28,9 @@ function listitem_to_html(obj)
 		"<li>$( to_html(obj.content) )</li>"
 	end
 end
-definition_to_html(obj) = "<dl>\n" * to_html(obj.content) * "</dl>\n"
-ordered_to_html(obj)    = "<ol>\n" * to_html(obj.content) * "</ol>\n"
-bullet_to_html(obj)     = "<ul>\n" * to_html(obj.content) * "</ul>\n"
+variable_to_html(obj) = "<dl>\n" * to_html(obj.content) * "</dl>\n"
+itemized_to_html(obj) = "<ul>\n" * to_html(obj.content) * "</ul>\n"
+ordered_to_html(obj)  = "<ol>\n" * to_html(obj.content) * "</ol>\n"
 	
 
 #
