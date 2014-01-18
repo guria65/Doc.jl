@@ -104,29 +104,29 @@ end
 #
 para_to_html(obj) = "<p>$( to_html(obj.content) )</p>\n"
 
-general_block(obj) = "<div class='$(obj.tag)'>$( to_html(obj.content) )</div>\n"
+general_html_block(obj) = "<div class='$(obj.tag)'>$( to_html(obj.content) )</div>\n"
 
-tip_to_html       = general_block
-note_to_html      = general_block
-warning_to_html   = general_block
-caution_to_html   = general_block
-important_to_html = general_block
+tip_to_html       = general_html_block
+note_to_html      = general_html_block
+warning_to_html   = general_html_block
+caution_to_html   = general_html_block
+important_to_html = general_html_block
 
-example_to_html = general_block
-sidebar_to_html = general_block
-passage_to_html = general_block
+example_to_html = general_html_block
+sidebar_to_html = general_html_block
+passage_to_html = general_html_block
 
 #
 # Verbatim blocks
 #
-function verbatim_block(obj)
+function verbatim_html_block(obj)
 	class = string(obj.tag)
 	"\n<pre class='$class'>\n" * to_html(obj.content) * "\n</pre>\n"
 end
-literal_to_html = verbatim_block
-listing_to_html = verbatim_block
+literal_to_html = verbatim_html_block
+listing_to_html = verbatim_html_block
 
 #
 # Tables -- TODO -- For now, just print verbatim.
 #
-table_to_html = verbatim_block
+table_to_html = verbatim_html_block
