@@ -94,6 +94,7 @@ MIME types include:
 "
 import Base: writemime
 
+writemime(io, ::MIME"text/xml"  , doc::DocNode) = write(io, to_xml(doc))
 writemime(io, ::MIME"text/html" , doc::DocNode) = write(io, to_html(doc))
 writemime(io, ::MIME"text/dump" , doc::DocNode) = write(io, to_dump(doc) * "\n")
 writemime(io, ::MIME"text/plain", doc::DocNode) = write(io, to_dump(doc) * "\n")
@@ -122,9 +123,10 @@ If the program receives two arguments, the first argument is interpreted as
 the mimetype, so that `jdoc --foo` converts docstrings to `\"text/foo\"`.
 See the API section for supported mimetypes.
 "
-include("lib/readdoc.jl")
 include("lib/parser.jl")
+include("lib/readdoc.jl")
 include("lib/to_dump.jl")
 include("lib/to_html.jl")
+include("lib/to_xml.jl")
 
 end
