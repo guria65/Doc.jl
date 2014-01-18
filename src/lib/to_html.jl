@@ -100,37 +100,33 @@ function root_to_html(obj)
 end
 
 #
-# Paragraphs
+# Paragraphs and regular blocks.
 #
-function para_to_html(obj)
-	class = obj.meta[:style]
-	html  = to_html(obj.content)
-	
-	class == :para ? "<p>$html</p>\n" : "<div class='$class'>\n$html\n</div>\n"
-end
+para_to_html(obj) = "<p>$( to_html(obj.content) )</p>\n"
 
-#
-# Normal blocks
-#
-function normal_to_html(obj)
-	class = string(obj.tag)
-	"\n<div class='$class'>\n" * to_html(obj.content) * "\n</div>\n"
-end
-example_to_html = normal_to_html
-sidebar_to_html = normal_to_html
-passage_to_html = normal_to_html
+general_block(obj) = "<div class='$(obj.tag)'>$( to_html(obj.content) )</div>\n"
+
+tip_to_html       = general_block
+note_to_html      = general_block
+warning_to_html   = general_block
+caution_to_html   = general_block
+important_to_html = general_block
+
+example_to_html = general_block
+sidebar_to_html = general_block
+passage_to_html = general_block
 
 #
 # Verbatim blocks
 #
-function verbatim_to_html(obj)
+function verbatim_block(obj)
 	class = string(obj.tag)
 	"\n<pre class='$class'>\n" * to_html(obj.content) * "\n</pre>\n"
 end
-literal_to_html = verbatim_to_html
-listing_to_html = verbatim_to_html
+literal_to_html = verbatim_block
+listing_to_html = verbatim_block
 
 #
 # Tables -- TODO -- For now, just print verbatim.
 #
-table_to_html = verbatim_to_html
+table_to_html = verbatim_block

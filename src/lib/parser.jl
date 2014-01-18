@@ -119,20 +119,23 @@ function parse_lists!(obj::DocNode)
 	# New content.
 	content = Item[]
 	
+	#
+	# NOTE: ':pragraph' includes admonition paragraphs.
+	#
 	style(obj::DocNode) = islist(obj) ? obj.tag : :none
 	function style(str::String)
 		ismatch(r"^\s*$"    , str) && return :blank
 		ismatch(r"^\s*[\d.]+\s", str) && return :ordered
 		ismatch(r"^\s*[*-]\s"  , str) && return :itemized
 		ismatch(r"^\s*\S.*::\s", str) && return :variable
-		ismatch(r"^\s*\S"      , str) && return :para
+		ismatch(r"^\s*\S"      , str) && return :paragraph
 		
 		# This should never be reached.
 		error("Could not recognize pattern for '$str'")
 	end
 	islist(obj::DocNode) = in(obj.tag   , [:ordered,:itemized,:variable])
 	islist(str::String)  = in(style(str), [:ordered,:itemized,:variable])
-	ispara(str::String)  = style(str) == :para
+	ispara(str::String)  = style(str) == :paragraph
 	
 	#
 	# "list" is a list object, containing many list items.
@@ -172,13 +175,13 @@ function parse_lists!(obj::DocNode)
 		
 		if isa(item,DocNode)
 			push!(content, item) # Block    => Any list must terminate.
-		elseif style(item) == :para && prev == ""
+		elseif style(item) == :paragraph && prev == ""
 			push!(content, item) # New para => Any list must terminate.
 		elseif length(content) > 0 && islist(content[end])
 			
-			if in(style(item), [:blank,:para])
+			if in(style(item), [:blank,:paragraph])
 				#
-				# IF :para
+				# IF :paragraph
 				#		=> prev must be ""
 				#		=> still inside the list item.
 				# 
@@ -251,8 +254,8 @@ function parse_paragraphs!(obj::DocNode)
 				append!(content[end],item)
 			else
 				# New pararaph.
-				push!(content, DocNode(:para,{:style => para(item)}) )
-				append!(content[end], rmlabel(item) )
+				push!(content, DocNode(para(item)))
+				append!(content[end], rmlabel(item))
 				inpara = true
 			end
 		end
