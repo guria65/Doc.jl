@@ -111,7 +111,7 @@ doc"
 
 This module includes a short script called `jdoc`, which uses the API described
 above to extract and process documentation in Julia files. The program can print
-the original raw string, or convert it to supported formats.
+the original raw string, or convert it to supported formats:
 
 ----
 jdoc example.jl          # Output raw docstring.
@@ -120,10 +120,6 @@ jdoc --dump  exampe.jl   # Output a dump tree.
 jdoc --html  exampe.jl   # Output HTML.
 jdoc --xml   exampe.jl   # Output XML (Docbook).
 ----
-
-If the program receives two arguments, the first argument is interpreted as
-the mimetype, so that `jdoc --foo` converts docstrings to `\"text/foo\"`.
-See the API section for supported mimetypes.
 "
 include("lib/parser.jl")
 include("lib/readdoc.jl")
