@@ -29,15 +29,11 @@ isdoc(expr::Expr) = (expr.head == :macrocall) &&
                     (expr.args[1] == symbol("@doc_str")) ||
                     (expr.args[1] == symbol("@doc_mstr"))
 
-ismstr(expr::Expr) = (expr.head == :macrocall) &&
-                     (expr.args[1] == symbol("@mstr"))
-
 isinclude(expr::Expr) = (expr.head == :call) &&
                         (expr.args[1] == :include)
 
 function expr2doc(expr::Expr)
 	if isdoc(expr)
-		# `eval` needed to run the @mstr macro.
 		doc = "\n" * eval(expr)
 	elseif isinclude(expr)
 		doc = readdoc(expr.args[2])
