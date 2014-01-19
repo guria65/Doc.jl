@@ -1,9 +1,9 @@
 doc"
-==== JDoc markup
+==== DocDoc markup
 
-JDoc is a human-readable markup language. It is a small subset of AsciiDoc,
+*DocDoc* is a human-readable markup language. It is a small subset of AsciiDoc,
 intended to provide enough features for source code documentation while
-keeping the implementation simple. JDoc can be naturally extended by using
+keeping the implementation simple. *DocDoc* can be naturally extended by using
 additional features from AsciiDoc and a standard AsciiDoc processor. The
 two main implementations are http://asciidoc.org[asciidoc] and
 http://asciidoctor.org[Asciidoctor]. The current parser supports the
@@ -107,7 +107,7 @@ process(other) = false
 #
 # This function parses a JuliaDoc string and returns an object.
 #
-function jdoc(docstr::String)
+function docdoc(docstr::String)
 	
 	root = DocNode(:root, docstr)
 	

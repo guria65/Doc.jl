@@ -1,32 +1,32 @@
 #!/usr/bin/env julia
 
-using JDoc
+using Doc
 
 doc"
 
-== jdoc
+== docdoc
 
 This is a command-line program that extract all the docstrings out of
 a Julia file (respecting `include` directives) to help produce manuals.
 The program is a work in progress, but here is the intended API:
 
-* `jdoc --plain` prints the unprocessed raw docstring. This allows users to
+* `docdoc --plain` prints the unprocessed raw docstring. This allows users to
 use an external program to process the docstring. Thus, users can use any
 markup, like LaTeX, ReST or raw HTML.
 
-* `jdoc` includes the *JDoc* markup format. JDoc is a subset of Asciidoc.
+* `docdoc` includes the *DocDoc* markup format. *DocDoc* is a subset of Asciidoc.
 It is simpler, has a short learning curve, and is well suited for writing
-program documentation. With it, `jdoc` can output other formats like HTML,
+program documentation. With it, `docdoc` can output other formats like HTML,
 without requiring external programs.
 
 ----
-jdoc example.jl          --  Output the unprocessed docstring.
-jdoc --plain example.jl  --  Output the unprocessed docstring.
-jdoc --html  exampe.jl   --  Output HTML.
-jdoc --xml  exampe.jl    --  Output XML (Docbook).
+docdoc example.jl          --  Output the unprocessed docstring.
+docdoc --plain example.jl  --  Output the unprocessed docstring.
+docdoc --html  exampe.jl   --  Output HTML.
+docdoc --xml  exampe.jl    --  Output XML (Docbook).
 ----
 
-I also want to think about how `jdoc` should support the `@doc` macro
+I also want to think about how `docdoc` should support the `@doc` macro
 provided by the JDoc.jl module.
 "
 
@@ -36,7 +36,7 @@ if length(ARGS) == 0 || ARGS[1] == "--help" || ARGS[1] == "-h" || length(ARGS) >
 			This program extracts documentation strings from a Julia file,
 			and prints it in an appropriate format.
 			
-			Usage:  jdoc [options] example.jl
+			Usage:  docdoc [options] example.jl
 			
 			Options:   --plain       Plain text output.
 			           --html        HTML output.
@@ -65,7 +65,7 @@ else
 		ifile = ARGS[2]
 		ofile = replace(ifile, r"\.jl$", "") * ".$ext"
 		
-		writemime(open(ofile, "w"), "text/$ext", jdoc(readdoc(ifile)))
+		writemime(open(ofile, "w"), "text/$ext", docdoc(readdoc(ifile)))
 	end
 	println("Wrote $ofile")
 end

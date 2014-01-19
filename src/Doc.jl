@@ -1,8 +1,8 @@
-module JDoc
+module Doc
 
 export DOC, DocEntry, DocDict
 export @doc, @doc_str, @doc_mstr
-export jdoc, DocNode, readdoc, man
+export docdoc, DocNode, readdoc, man
 
 
 # String macros -- Sole purpose is to denote docstrings.
@@ -10,30 +10,30 @@ macro doc_str(str)   str  end
 macro doc_mstr(str)  str  end
 
 doc"
-== JDoc.jl
+== Doc.jl
 
 ----
 Author:  Daniel Carrera
-Version: v0.1 alpha
+Version: v0.2 alpha
 ----
 
 A modern documentation system for Julia.
 
-JDoc.jl is a documentation module for Julia. It provides features for
-both online help and for writing manual-style documentation. JDoc is
+Doc.jl is a documentation module for Julia. It provides features for
+both online help and for writing manual-style documentation. Doc.jl is
 currently alpha software. If you are feeling adventurous, you are
 encouraged to give it a try. This page summarizes the current status of
-JDoc.jl, and a description of the JDoc markup format. You may complement
+Doc.jl, and a description of the *DocDoc* markup format. You may complement
 this document with the wiki. This document is divided in three parts:
 
 
-API:: A lightning tour of the JDoc API, for those who want to write their
-own scripts using JDoc.
+API:: A lightning tour of the Doc.jl API, for those who want to write their
+own scripts using DocDoc.
 
-Online help:: How JDoc will let you add your function's documentation to
+Online help:: How Doc.jl will let you add your function's documentation to
 the online help.
 
-Manuals:: How JDoc will make it easier for you to write and maintain a
+Manuals:: How Doc.jl will make it easier for you to write and maintain a
 manual for your product.
 "
 
@@ -55,18 +55,18 @@ doc"
 Basic usage:
 
 ----
-using JDoc
+using DocDoc
 
 doc\"
 This is a docstring. Docstrings contain program documentation
-that can be extracted and parsed by the JDoc module.
+that can be extracted and parsed by the DocDoc module.
 \"
 
 # Extract docstrings from a file.
 str = readdoc(\"example.jl\")
 
-# Parse the string as JDoc markup.
-doc = jdoc(str)
+# Parse the string as DocDoc markup.
+doc = docdoc(str)
 
 # Convert to HTML.
 writemime(STDOUT, \"text/html\", doc)
@@ -79,10 +79,10 @@ source documentation that is not part of the online help.
 readdoc(_source_):: Given an IO stream or file name, this function extracts
 all the docstrings, respecting `include` directives.
 
-jdoc(_docstr_):: Takes a string and parses it as JDoc markup. The resulting
+docdoc(_docstr_):: Takes a string and parses it as *DocDoc* markup. The resulting
 object can be converted to various formats such as HTML and LaTeX.
 
-writemime(_stream, mime, doc_):: JDoc.jl uses the  `writemime` framework
+writemime(_stream, mime, doc_):: Doc.jl uses the  `writemime` framework
 to convert documentation objects into other formats. Currently supported
 MIME types include:
 
@@ -108,18 +108,18 @@ include("lib/help.jl")
 doc"
 === Writing manuals
 
-==== Command-line program: `jdoc`
+==== Command-line program: `docdoc`
 
-This module includes a short script called `jdoc`, which uses the API described
+This module includes a short script called `docdoc`, which uses the API described
 above to extract and process documentation in Julia files. The program can print
 the original raw string, or convert it to supported formats:
 
 ----
-jdoc example.jl          # Output raw docstring.
-jdoc --plain example.jl  # Output raw docstring.
-jdoc --dump  exampe.jl   # Output a dump tree.
-jdoc --html  exampe.jl   # Output HTML.
-jdoc --xml   exampe.jl   # Output XML (Docbook).
+docdoc example.jl          # Output raw docstring.
+docdoc --plain example.jl  # Output raw docstring.
+docdoc --dump  exampe.jl   # Output a dump tree.
+docdoc --html  exampe.jl   # Output HTML.
+docdoc --xml   exampe.jl   # Output XML (Docbook).
 ----
 "
 include("lib/parser.jl")
