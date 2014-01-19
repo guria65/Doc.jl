@@ -84,8 +84,38 @@ function man(key::Module)
 	#
 	#  3.  Inside this function, print the module documentation followed by
 	#      a list of functions that have methods documented.
+	# 
+	#  4.  Run names(Module) to at least get a list of names exported by
+	#      the module.
 end
+
+#
+# All other objects.
+#
+function man(key;quiet=false)
+	#
+	# Determine the lineage of types.
+	#
+	lineage = [typeof(val)]
+	while lineage[end] != Any
+		push!(lineage, super(lineage[end]))
+	end
+	lineage = join(lineage, " <: ")
+	println("Type: $(lineage)\n")
 	
+	#
+	# See if we have documentation.
+	#
+	if haskey(DOC,key)
+		# Add indentation.
+		doc = chomp(DOC[key][:doc])
+		doc = "    : " * replace(doc, "\n", "\n    : ")
+		
+		print(doc)
+	elseif !quiet
+		println("No help available.")
+	end
+end
 
 macro doc(s,e)
 	
