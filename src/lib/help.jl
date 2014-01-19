@@ -37,6 +37,15 @@ function fullname(m::Method)
 	
 	return md_name * "." * fn_name * fn_param
 end
+#
+# TODO: Update this so it also prints metadata, if any.
+#
+function printdoc(key;indent="")
+	# Add indentation.
+	doc = chomp(DOC[key][:doc])
+	doc = indent * replace(doc, "\n", "\n$indent")
+	print(doc)
+end	
 
 #
 # Temporary name, to avoid lashes with `help()`.
@@ -46,10 +55,7 @@ function man(key::Method;quiet=false)
 	println("\n  " * fullname(key))
 	
 	if haskey(DOC,key)
-		# Add indentation.
-		doc = chomp(DOC[key][:doc])
-		doc = "    : " * replace(doc, "\n", "\n    : ")
-		print(doc)
+		printdoc(key, indent="    : ")
 	elseif !quiet
 		println("No help available.")
 	end
@@ -59,11 +65,7 @@ function man(key::Function)
 	println("Help for \"$(key)\":")
 	
 	if haskey(DOC,key)
-		# Add indentation.
-		doc = chomp(DOC[key][:doc])
-		doc = "    " * replace(doc, "\n", "\n    ")
-		
-		print(doc)
+		printdoc(key, indent="    ")
 	end
 	#
 	# Even if no method is documented, this will at least give a list of methods.
@@ -93,9 +95,7 @@ end
 # All other objects.
 #
 function man(key;quiet=false)
-	#
 	# Determine the lineage of types.
-	#
 	lineage = [typeof(val)]
 	while lineage[end] != Any
 		push!(lineage, super(lineage[end]))
@@ -103,33 +103,41 @@ function man(key;quiet=false)
 	lineage = join(lineage, " <: ")
 	println("Type: $(lineage)\n")
 	
-	#
 	# See if we have documentation.
-	#
 	if haskey(DOC,key)
-		# Add indentation.
-		doc = chomp(DOC[key][:doc])
-		doc = "    : " * replace(doc, "\n", "\n    : ")
-		
-		print(doc)
+		printdoc(key, indent="    : ")
 	elseif !quiet
 		println("No help available.")
 	end
 end
 
-macro doc(s,e)
+macro doc(args...)
 	
-	if typeof(e) == Expr
+	if length(args) < 2 || length(args) > 3
+		error("Wrong number of arguments ($(length(args))) in @doc macro.")
+	end
+	
+	if length(args) == 2
+		meta = Dict()
+		str  = args[1]
+		expr = args[2]
+	else
+		meta = args[1]
+		str  = args[2]
+		expr = args[3]
+	end
+	
+	if typeof(expr) == Expr
 		# Expr => Get method
 		
 		#
-		# e.head                   is  :(=) or :function
-		# e.args[1]                is  :(foo(x,y::Real))
-		# e.args[1].head           is  :call
-		# e.args[1].args[1]        is  :foo
-		# e.args[1].args[2:end]    is  [ :x , :(y::Real) ]
+		# expr.head                   is  :(=) or :function
+		# expr.args[1]                is  :(foo(x,y::Real))
+		# expr.args[1].head           is  :call
+		# expr.args[1].args[1]        is  :foo
+		# expr.args[1].args[2:end]    is  [ :x , :(y::Real) ]
 		#
-		params = e.args[1].args[2:end]
+		params = expr.args[1].args[2:end]
 		
 		#
 		# Get the signature as a tuple.
@@ -141,7 +149,7 @@ macro doc(s,e)
 		#
 		# Method list -- all methods that match the signature.
 		#
-		func = eval(e)  # Function.
+		func = eval(expr)  # Function.
 		ml = methods(func, sig)
 		ml = filter(m -> m.sig == sig, ml)
 		
@@ -152,14 +160,15 @@ macro doc(s,e)
 	else
 		# Symbol => Get function
 		
-		key = eval(e)
+		key = eval(expr)
 	end
 	
 	DOC[key] = DocEntry()
-	DOC[key][:doc] = typeof(s) == Expr ? eval(s) : s
+	DOC[key][:doc]  = typeof(str) == Expr ? eval(str) : str
+	DOC[key][:meta] = meta
 	
 	#
 	# Finally, run the function declaration.
 	#
-	:($(esc(e)))
+	:($(esc(expr)))
 end
