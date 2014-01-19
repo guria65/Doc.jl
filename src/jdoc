@@ -45,12 +45,28 @@ if length(ARGS) == 0 || ARGS[1] == "--help" || ARGS[1] == "-h" || length(ARGS) >
 			"""
 	println(str)
 
-elseif length(ARGS) == 1
-	println(readdoc(ARGS[1]))
-elseif ARGS[1] == "--plain"
-	println(readdoc(ARGS[2]))
 else
-	format = "text/" * replace(ARGS[1], "-", "")
-	writemime(STDOUT, format, jdoc(readdoc(ARGS[2])))
+
+	if length(ARGS) == 1
+		ifile = ARGS[1]
+		ofile = replace(ifile, r"\.jl$", "") * ".txt"
+		
+		write(open(ofile, "w"), readdoc(ifile))
+		
+	elseif ARGS[1] == "--plain"
+		ifile = ARGS[2]
+		ofile = replace(ifile, r"\.jl$", "") * ".txt"
+		
+		write(open(ofile, "w"), readdoc(ifile))
+		
+	else
+		ext = replace(ARGS[1], "-", "")
+		
+		ifile = ARGS[2]
+		ofile = replace(ifile, r"\.jl$", "") * ".$ext"
+		
+		writemime(open(ofile, "w"), "text/$ext", jdoc(readdoc(ifile)))
+	end
+	println("Wrote $ofile")
 end
 
