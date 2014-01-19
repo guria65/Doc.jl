@@ -22,16 +22,16 @@ A modern documentation system for Julia.
 JDoc.jl is a documentation module for Julia. It provides features for
 both online help and for writing manual-style documentation. JDoc is
 currently alpha software. If you are feeling adventurous, you are
-ecouraged to give it a try. This page summarizes the current status of
+encouraged to give it a try. This page summarizes the current status of
 JDoc.jl, and a description of the JDoc markup format. You may complement
 this document with the wiki. This document is divided in three parts:
 
 
-API:: A lightining tour of the JDoc API, for those who want to write their
+API:: A lightning tour of the JDoc API, for those who want to write their
 own scripts using JDoc.
 
 Online help:: How JDoc will let you add your function's documentation to
-the `help()` command.
+the online help.
 
 Manuals:: How JDoc will make it easier for you to write and maintain a
 manual for your product.
@@ -52,7 +52,7 @@ end
 doc"
 === API
 
-Basic ussage:
+Basic usage:
 
 ----
 using JDoc
@@ -87,7 +87,8 @@ to convert documentation objects into other formats. Currently supported
 MIME types include:
 
 |===
-|`text/plain` | Raw docstring without any proessing.
+|`text/plain` | Raw docstring without any processing.
+|`text/xml`   | Convert to XML (Docbook).
 |`text/html`  | Convert to HTML.
 |`text/dump`  | Produce a dump tree useful for debugging.
 |===
