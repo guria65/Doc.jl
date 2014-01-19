@@ -70,8 +70,8 @@ end
 function root_to_xml(obj)
 	"""
 	<?xml version='1.0' encoding='UTF-8'?>
-	<!DOCTYPE article PUBLIC '-//OASIS//DTD Simplified DocBook XML V1.0//EN'
-	'http://www.oasis-open.org/docbook/xml/simple/1.0/sdocbook.dtd'>
+	<!DOCTYPE article PUBLIC \"-//OASIS//DTD DocBook XML V4.3//EN\"
+	\"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd\">
 	<article>
 	  $( to_xml(obj.content) )
 	</article>
