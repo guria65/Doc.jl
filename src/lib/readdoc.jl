@@ -13,7 +13,7 @@ all the docstrings, respecting `include` directives.
 
 " function readdoc(io::IOStream)
 	#
-	# The "\n1" is an ugly hack to ensure that the file ends in a statement.
+	# FIXME: The "\n1" is an ugly hack to make sure the file ends in an expression.
 	#
 	str = join(readlines(io) ,"") * "\n1" # File contents.
 	doc = "" # Docstring.
@@ -22,21 +22,35 @@ all the docstrings, respecting `include` directives.
 	const N = length(str)
 	
 	while pos < N
-		expr, pos = parse(str, pos)
-		
+		#
+		# Raise no errors -- Seems to be needed at the end of input.
+		#
+		expr, pos = parse(str, pos, raise=false)
+
 		doc *= expr2doc(expr)
 	end
 	
 	return doc
 end
 
-isdoc(expr::Expr) = (expr.head == :macrocall) &&
-                    (expr.args[1] == symbol("@doc_str")) ||
-                    (expr.args[1] == symbol("@doc_mstr"))
-
-isinclude(expr::Expr) = (expr.head == :call) &&
-                        (expr.args[1] == :include)
-
+function isdoc(expr::Expr)
+	
+	expr.head != :macrocall && return false
+	length(expr.args) == 0  && return false
+	
+    expr.args[1] == symbol("@doc_str")  && return true
+    expr.args[1] == symbol("@doc_mstr") && return true
+	
+	return false
+end
+function isinclude(expr::Expr)
+	
+	expr.head != :call     && return false
+	length(expr.args) == 0 && return false
+	
+	expr.args[1] == :include
+end
+    
 expr2doc(other) = ""
 function expr2doc(expr::Expr)
 	if isdoc(expr)
