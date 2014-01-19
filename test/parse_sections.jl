@@ -6,14 +6,14 @@ Hello
 
 = My Title
 """
-@test_throws jdoc(docstr) # No text allowed before a level-0 section.
+@test_throws docdoc(docstr) # No text allowed before a level-0 section.
 
 docstr = """
 = Title 1
 
 = Title 2
 """
-@test_throws jdoc(docstr) # Only one level-0 section allowed.
+@test_throws docdoc(docstr) # Only one level-0 section allowed.
 
 #
 # Test metadata
@@ -25,17 +25,17 @@ v1.0.13
 
 Hello
 """
-@test jdoc(docstr).content[1].meta[:level] == 0
-@test jdoc(docstr).content[1].meta[:title] == "Title"
-@test jdoc(docstr).content[1].meta[:author] == "Daniel Carrera"
-@test jdoc(docstr).content[1].meta[:revision] == "v1.0.13"
+@test docdoc(docstr).content[1].meta[:level] == 0
+@test docdoc(docstr).content[1].meta[:title] == "Title"
+@test docdoc(docstr).content[1].meta[:author] == "Daniel Carrera"
+@test docdoc(docstr).content[1].meta[:revision] == "v1.0.13"
 
 docstr = """
 = Title
 
 Hello
 """
-@test_throws jdoc(docstr).content[1].meta[:author] # No author.
+@test_throws docdoc(docstr).content[1].meta[:author] # No author.
 
 docstr = """
 = Title
@@ -43,7 +43,7 @@ Daniel Carrera
 
 Hello
 """
-@test_throws jdoc(docstr).content[1].meta[:revision] # No revision.
+@test_throws docdoc(docstr).content[1].meta[:revision] # No revision.
 
 #
 # Nesting levels.
@@ -61,7 +61,7 @@ Preamble
 
 == Section 2
 """
-obj = jdoc(docstr)
+obj = docdoc(docstr)
 top = obj.content[1]
 
 @test obj.tag == :root

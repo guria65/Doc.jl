@@ -10,7 +10,7 @@ docstr = """
 * Item 1
 * Item 2
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :itemized
 @test list.content[1].tag == :listitem
@@ -24,7 +24,7 @@ docstr = """
 - Item 1
 - Item 2
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :itemized
 @test list.content[1].tag == :listitem
@@ -42,7 +42,7 @@ docstr = """
 . Item 1
 . Item 2
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :ordered
 @test list.content[1].tag == :listitem
@@ -56,7 +56,7 @@ docstr = """
 1. Item 1
 1. Item 2
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :ordered
 @test list.content[1].tag == :listitem
@@ -70,7 +70,7 @@ docstr = """
 1. Item 1
 2. Item 2
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :ordered
 @test list.content[1].tag == :listitem
@@ -88,7 +88,7 @@ docstr = """
 Term 1:: Value 1
 Term 2:: Value 2
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -102,14 +102,14 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello::World"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :para
 @test list.content[1] == "Hello::World"
 
 
 docstr = "Hello:: World"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -119,7 +119,7 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello :: World"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -129,7 +129,7 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello(x::Int, y:: Real)::World"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -139,7 +139,7 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello(x::Int, y::Real):: World::Water"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -149,7 +149,7 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello(x::Int, y::Real):: World:: Water"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -159,7 +159,7 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello(x:: Int, y::Real):: World::Water"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -169,7 +169,7 @@ list = jdoc(docstr).content[1]
 
 
 docstr = "Hello(x:: Int, y::Real):: World:: Water"
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test list.content[1].tag == :listitem
@@ -191,7 +191,7 @@ docstr = """
 Canada
 * Koala
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :itemized
 @test length(list.content) == 5
@@ -220,7 +220,7 @@ docstr = """
 Canada
 3. Koala
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :ordered
 @test length(list.content) == 5
@@ -249,7 +249,7 @@ Country:: Canada
 North America
 Sex:: Male
 """
-list = jdoc(docstr).content[1]
+list = docdoc(docstr).content[1]
 
 @test list.tag == :variable
 @test length(list.content) == 5
@@ -304,7 +304,7 @@ Paragraph
 
 Test Term:: Test 5.
 """
-obj = jdoc(docstr)
+obj = docdoc(docstr)
 
 @test obj.content[1].tag == :section
 

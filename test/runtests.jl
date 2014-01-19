@@ -1,13 +1,13 @@
 using Base.Test
 
-include("../src/JDoc.jl")
+include("../src/Doc.jl")
 
-using JDoc
+using Doc
 
 tests = [ "parse_sections", "parse_paragraphs", "parse_blocks", "parse_lists" ]
 
 for t in tests
-    println("Running jdoc_$t ...")
+    println("Running $t ...")
     try
         include("$t.jl")
     catch err
