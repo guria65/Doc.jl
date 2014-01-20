@@ -148,6 +148,36 @@ CAUTION: This is a paragraph.
 IMPORTANT: This is a paragraph.
 ----
 
+Lists:: All major types of lists: itemized (bullet) lists, ordered
+lists and variable (definition) lists:
+----
+This is an itemized list:
+
+* Item 1.
+* Item 2.
+
+You can also use hyphens:
+
+- Item 1.
+- Item 2.
+
+This is an ordered list:
+
+1. Item 1.
+2. Item 2.
+
+The numbers are optional:
+
+. Item 1.
+. Item 2.
+
+This is a variable/definition list:
+
+Name:: Joe Smith
+Age:: 36
+Job:: Architect
+----
+
 Blocks:: Most block types supported. Tables are passed verbatim.
 ----
   ....
