@@ -14,7 +14,7 @@ doc"
 
 ----
 Author:  Daniel Carrera
-Version: v0.2 alpha
+Version: v0.1.0-alpha
 ----
 
 A modern documentation system for Julia.
